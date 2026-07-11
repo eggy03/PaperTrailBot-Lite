@@ -2,8 +2,6 @@ package io.github.eggy03.papertrail.bot.handlers.command;
 
 import io.github.eggy03.papertrail.bot.about.ApplicationInfo;
 import io.github.eggy03.papertrail.bot.utils.BooleanUtils;
-import io.github.eggy03.papertrail.sdk.client.AuditLogRegistrationClient;
-import io.github.eggy03.papertrail.sdk.client.MessageLogRegistrationClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -24,8 +22,6 @@ import java.util.Set;
 @ApplicationScoped
 public final class DebugCommandHandler {
 
-    private final @NonNull AuditLogRegistrationClient auditLogRegistrationClient;
-    private final @NonNull MessageLogRegistrationClient messageLogRegistrationClient;
     private final @NonNull ApplicationInfo applicationInfo;
 
     // necessary permissions for the bot to function
@@ -41,9 +37,7 @@ public final class DebugCommandHandler {
     );
 
     @Inject
-    public DebugCommandHandler(@NonNull AuditLogRegistrationClient auditLogRegistrationClient, @NonNull MessageLogRegistrationClient messageLogRegistrationClient, @NonNull ApplicationInfo applicationInfo) {
-        this.auditLogRegistrationClient = auditLogRegistrationClient;
-        this.messageLogRegistrationClient = messageLogRegistrationClient;
+    public DebugCommandHandler(@NonNull ApplicationInfo applicationInfo) {
         this.applicationInfo = applicationInfo;
     }
 
@@ -64,7 +58,6 @@ public final class DebugCommandHandler {
 
         eb.addField(MarkdownUtil.underline("User Info"), MarkdownUtil.quoteBlock(getCallerInfo(member)), true);
         eb.addField(MarkdownUtil.underline("Bot Info"), MarkdownUtil.quoteBlock(getBotInfo(event)), true);
-        eb.addField(MarkdownUtil.underline("Configuration Info"), MarkdownUtil.quoteBlock(getConfigurationInfo(guild)), true);
 
         eb.setFooter(applicationInfo.projectName() + " " + applicationInfo.projectVersion());
         eb.setTimestamp(Instant.now());
@@ -135,29 +128,5 @@ public final class DebugCommandHandler {
         JDA.ShardInfo shardInfo = event.getJDA().getShardInfo();
         return "Current Shard ID: " + shardInfo.getShardId() + "\n" +
                 "Total Shards: " + shardInfo.getShardTotal();
-    }
-
-    @NonNull
-    private String getConfigurationInfo(@NonNull Guild guild) {
-
-        StringBuilder sb = new StringBuilder();
-
-        auditLogRegistrationClient.getRegisteredGuild(guild.getId()).ifPresentOrElse(entity -> {
-            GuildChannel channel = guild.getGuildChannelById(entity.getChannelId());
-            if (channel != null)
-                sb.append("Registered Audit Log Channel: ").append(MarkdownUtil.underline(channel.getName())).append("\n");
-            else
-                sb.append("Registered Audit Log Channel: ").append(MarkdownUtil.underline("Registered Channel Unresolvable")).append("\n");
-        }, () -> sb.append(MarkdownUtil.underline("No Channel Registered For Audit Logging")).append("\n"));
-
-        messageLogRegistrationClient.getRegisteredGuild(guild.getId()).ifPresentOrElse(entity -> {
-            GuildChannel channel = guild.getGuildChannelById(entity.getChannelId());
-            if (channel != null)
-                sb.append("Registered Message Log Channel: ").append(MarkdownUtil.underline(channel.getName()));
-            else
-                sb.append("Registered Message Log Channel: ").append(MarkdownUtil.underline("Registered Channel Unresolvable"));
-        }, () -> sb.append(MarkdownUtil.underline("No Channel Registered For Message Logging")));
-
-        return sb.toString();
     }
 }
