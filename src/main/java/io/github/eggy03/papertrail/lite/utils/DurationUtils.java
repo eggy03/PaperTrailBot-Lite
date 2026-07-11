@@ -1,0 +1,87 @@
+package io.github.eggy03.papertrail.lite.utils;
+
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.utils.TimeFormat;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.Duration;
+import java.time.OffsetDateTime;
+
+@UtilityClass
+@Slf4j
+public final class DurationUtils {
+
+    @NonNull
+    private static final String FALLBACK_STRING = "N/A";
+
+    public static @NonNull String formatSeconds(@Nullable Object seconds) {
+        if (seconds == null) {
+            return FALLBACK_STRING;
+        }
+
+        try {
+            long secondsLong = Long.parseLong(seconds.toString());
+            if (secondsLong == 0L) return "No Limits";
+            Duration d = Duration.ofSeconds(secondsLong);
+            long durationDays = d.toDays();
+            long durationHours = d.toHoursPart();
+            long durationMinutes = d.toMinutesPart();
+            long durationSeconds = d.toSecondsPart();
+
+            StringBuilder sb = new StringBuilder();
+
+            if (durationDays > 0)
+                sb.append(durationDays).append("d ");
+            if (durationHours > 0)
+                sb.append(durationHours).append("h ");
+            if (durationMinutes > 0)
+                sb.append(durationMinutes).append("m ");
+            if (durationSeconds > 0)
+                sb.append(durationSeconds).append("s");
+
+            return sb.toString().trim();
+        } catch (NumberFormatException e) {
+            log.debug("failed to parse seconds from value={})", seconds, e);
+            return String.valueOf(seconds);
+        }
+
+
+    }
+
+    public static @NonNull String formatMinutes(@Nullable Object minutes) {
+        if (minutes == null) {
+            return FALLBACK_STRING;
+        }
+        try {
+            long minutesLong = Long.parseLong(minutes.toString());
+            if (minutesLong == 0L) return "No Limits";
+            Duration d = Duration.ofMinutes(minutesLong);
+            long days = d.toDays();
+            long hours = d.toHoursPart();
+
+            StringBuilder sb = new StringBuilder();
+            if (days > 0) sb.append(days).append("d ");
+            if (hours > 0) sb.append(hours).append("h ");
+            return sb.toString().trim();
+        } catch (NumberFormatException e) {
+            log.debug("failed to parse minutes from value={} ", minutes, e);
+            return String.valueOf(minutes);
+        }
+
+
+    }
+
+    public static @NonNull String isoToLocalTimeCounter(@Nullable Object isoTime) {
+
+        if (isoTime == null)
+            return FALLBACK_STRING;
+
+        if (isoTime instanceof OffsetDateTime offsetDateTime)
+            return TimeFormat.DATE_TIME_LONG.format(offsetDateTime);
+
+        return TimeFormat.DATE_TIME_LONG.format(OffsetDateTime.parse(isoTime.toString()));
+
+    }
+}
