@@ -23,7 +23,7 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal:9.7
 
 RUN microdnf install -y freetype fontconfig \
 &&  microdnf clean all \
-&& useradd -r -m papertrailbot
+&& useradd -r -m papertrailbot-lite
 
 WORKDIR /app
 
@@ -31,4 +31,4 @@ WORKDIR /app
 COPY --from=build /native-build/target /app/bot
 
 USER papertrailbot
-ENTRYPOINT ["./bot/papertrailbot-runner"]
+ENTRYPOINT ["./bot/papertrailbot-lite-runner"]
