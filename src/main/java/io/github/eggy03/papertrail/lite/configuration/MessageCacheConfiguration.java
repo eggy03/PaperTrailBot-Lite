@@ -16,12 +16,12 @@ public final class MessageCacheConfiguration {
     private final @NonNull Cache<String, CachedMessage> cache;
 
     public MessageCacheConfiguration(
-            @ConfigProperty(name = "max.message.stores") @NonNull Long maxMessagesToStore,
-            @ConfigProperty(name = "auto.delete.message.after") @NonNull Long expireAfterWrite) {
+            @ConfigProperty(name = "max.cached.messages") @NonNull Long maxCachedMessages,
+            @ConfigProperty(name = "max.cached.message.retention.days") @NonNull Long expireAfterWrite) {
 
         this.cache = Caffeine.newBuilder()
                 .expireAfterWrite(Duration.ofDays(expireAfterWrite))
-                .maximumSize(maxMessagesToStore)
+                .maximumSize(maxCachedMessages)
                 .build();
     }
 
