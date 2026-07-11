@@ -64,7 +64,6 @@ public final class GuildMessageEventHandler {
     }
 
     public void handleMessageUpdateEvent(@NonNull MessageUpdateEvent event) {
-        if(messageLogChannel.equals("DISABLE")) return;
 
         // fetch the old cached message if present
         CachedMessage oldCachedMessage = messageCache.get(event.getMessageId());
@@ -107,7 +106,6 @@ public final class GuildMessageEventHandler {
     }
 
     public void handleMessageDeleteEvent(@NonNull MessageDeleteEvent event) {
-        if(messageLogChannel.equals("DISABLE")) return;
 
         // fetch the old cached message if present
         CachedMessage oldCachedMessage = messageCache.get(event.getMessageId());
