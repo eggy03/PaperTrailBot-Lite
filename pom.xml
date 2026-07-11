@@ -6,7 +6,7 @@
     <artifactId>papertrailbot-lite</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>PaperTrail Bot Lite Edition</name>
-    <description>A simple bot for logging all server and member actions</description>
+    <description>Lite version of PaperTrailBot</description>
     <packaging>quarkus</packaging>
 
     <properties>
