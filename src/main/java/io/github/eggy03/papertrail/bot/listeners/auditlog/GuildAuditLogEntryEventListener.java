@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.bot.listeners.auditlog;
 
-import io.github.eggy03.papertrail.bot.annotations.VirtualThreadFactory;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -8,8 +7,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Listener responsible for receiving {@link GuildAuditLogEntryCreateEvent}
@@ -33,15 +30,10 @@ import java.util.concurrent.ThreadFactory;
 public final class GuildAuditLogEntryEventListener extends ListenerAdapter {
 
     private final @NonNull Instance<GuildAuditLogEntryCreateEventActionTypeHandler> handlerInstances;
-    private final @NonNull
-    @VirtualThreadFactory ThreadFactory virtualThreadFactory;
 
     @Inject
-    public GuildAuditLogEntryEventListener(@NonNull Instance<GuildAuditLogEntryCreateEventActionTypeHandler> handlerInstances,
-                                           @NonNull @VirtualThreadFactory ThreadFactory virtualThreadFactory
-    ) {
+    public GuildAuditLogEntryEventListener(@NonNull Instance<GuildAuditLogEntryCreateEventActionTypeHandler> handlerInstances) {
         this.handlerInstances = handlerInstances;
-        this.virtualThreadFactory = virtualThreadFactory;
     }
 
     @Override
@@ -51,17 +43,7 @@ public final class GuildAuditLogEntryEventListener extends ListenerAdapter {
                 event.getEntry().getType(), event.getGuild().getName(), event.getGuild().getId()
         );
 
-        /*
-        Each handler instance gets its own virtual thread to handle the event's ActionType
-        or else, they will be processed sequentially in a single virtual thread.
-        This will be particularly slower if two or more inherited classes have overrides
-        for handling the same ActionType.
-         */
-        handlerInstances.forEach(handler ->
-                virtualThreadFactory
-                        .newThread(() -> handler.handleActionType(event))
-                        .start()
-        );
+        handlerInstances.forEach(handler -> handler.handleActionType(event));
     }
 
 }

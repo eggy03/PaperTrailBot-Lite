@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.bot.listeners.guild;
 
-import io.github.eggy03.papertrail.bot.annotations.VirtualThreadFactory;
 import io.github.eggy03.papertrail.bot.handlers.guild.GuildSecurityIncidentEventHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -10,20 +9,15 @@ import net.dv8tion.jda.api.events.guild.update.GuildUpdateSecurityIncidentAction
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateSecurityIncidentDetectionsEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.util.concurrent.ThreadFactory;
-
 @Singleton
 @Slf4j
 public final class GuildSecurityIncidentEventListener extends ListenerAdapter {
 
     private final @NonNull GuildSecurityIncidentEventHandler handler;
-    private final @NonNull
-    @VirtualThreadFactory ThreadFactory virtualThreadFactory;
 
     @Inject
-    public GuildSecurityIncidentEventListener(@NonNull GuildSecurityIncidentEventHandler handler, @NonNull @VirtualThreadFactory ThreadFactory virtualThreadFactory) {
+    public GuildSecurityIncidentEventListener(@NonNull GuildSecurityIncidentEventHandler handler) {
         this.handler = handler;
-        this.virtualThreadFactory = virtualThreadFactory;
     }
 
     @Override
@@ -32,9 +26,7 @@ public final class GuildSecurityIncidentEventListener extends ListenerAdapter {
                 event.getGuild().getName(), event.getGuild().getId()
         );
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleGuildUpdateSecurityIncidentDetections(event))
-                .start();
+        handler.handleGuildUpdateSecurityIncidentDetections(event);
     }
 
     @Override
@@ -43,9 +35,7 @@ public final class GuildSecurityIncidentEventListener extends ListenerAdapter {
                 event.getGuild().getName(), event.getGuild().getId()
         );
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleGuildUpdateSecurityIncidentActions(event))
-                .start();
+        handler.handleGuildUpdateSecurityIncidentActions(event);
 
     }
 

@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.bot.listeners.command;
 
-import io.github.eggy03.papertrail.bot.annotations.VirtualThreadFactory;
 import io.github.eggy03.papertrail.bot.handlers.command.ServerStatCommandHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -10,20 +9,15 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.util.concurrent.ThreadFactory;
-
 @Singleton
 @Slf4j
 public final class ServerStatCommandListener extends ListenerAdapter {
 
     private final @NonNull ServerStatCommandHandler handler;
-    private final @NonNull
-    @VirtualThreadFactory ThreadFactory virtualThreadFactory;
 
     @Inject
-    public ServerStatCommandListener(@NonNull ServerStatCommandHandler handler, @NonNull @VirtualThreadFactory ThreadFactory virtualThreadFactory) {
+    public ServerStatCommandListener(@NonNull ServerStatCommandHandler handler) {
         this.handler = handler;
-        this.virtualThreadFactory = virtualThreadFactory;
     }
 
     @Override
@@ -39,9 +33,7 @@ public final class ServerStatCommandListener extends ListenerAdapter {
             return;
         }
 
-        virtualThreadFactory
-                .newThread(() -> handler.sendServerStats(event, guild))
-                .start();
+        handler.sendServerStats(event, guild);
 
     }
 }

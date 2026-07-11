@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.bot.listeners.command;
 
-import io.github.eggy03.papertrail.bot.annotations.VirtualThreadFactory;
 import io.github.eggy03.papertrail.bot.handlers.command.DebugCommandHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -11,20 +10,15 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.util.concurrent.ThreadFactory;
-
 @Slf4j
 @Singleton
 public final class DebugCommandListener extends ListenerAdapter {
 
     private final @NonNull DebugCommandHandler handler;
-    private final @NonNull
-    @VirtualThreadFactory ThreadFactory virtualThreadFactory;
 
     @Inject
-    public DebugCommandListener(@NonNull DebugCommandHandler handler, @NonNull @VirtualThreadFactory ThreadFactory virtualThreadFactory) {
+    public DebugCommandListener(@NonNull DebugCommandHandler handler) {
         this.handler = handler;
-        this.virtualThreadFactory = virtualThreadFactory;
     }
 
     @Override
@@ -40,8 +34,6 @@ public final class DebugCommandListener extends ListenerAdapter {
             return;
         }
 
-        virtualThreadFactory
-                .newThread(() -> handler.sendDebugInfo(event, guild, member))
-                .start();
+        handler.sendDebugInfo(event, guild, member);
     }
 }

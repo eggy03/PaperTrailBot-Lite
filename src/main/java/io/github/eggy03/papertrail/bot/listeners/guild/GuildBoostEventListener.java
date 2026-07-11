@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.bot.listeners.guild;
 
-import io.github.eggy03.papertrail.bot.annotations.VirtualThreadFactory;
 import io.github.eggy03.papertrail.bot.handlers.guild.GuildBoostEventHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -11,20 +10,15 @@ import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.util.concurrent.ThreadFactory;
-
 @Singleton
 @Slf4j
 public final class GuildBoostEventListener extends ListenerAdapter {
 
     private final @NonNull GuildBoostEventHandler handler;
-    private final @NonNull
-    @VirtualThreadFactory ThreadFactory virtualThreadFactory;
 
     @Inject
-    public GuildBoostEventListener(@NonNull GuildBoostEventHandler handler, @NonNull @VirtualThreadFactory ThreadFactory virtualThreadFactory) {
+    public GuildBoostEventListener(@NonNull GuildBoostEventHandler handler) {
         this.handler = handler;
-        this.virtualThreadFactory = virtualThreadFactory;
     }
 
     @Override
@@ -34,9 +28,7 @@ public final class GuildBoostEventListener extends ListenerAdapter {
                 event.getGuild().getName(), event.getGuild().getId()
         );
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleUpdateBoostTier(event))
-                .start();
+        handler.handleUpdateBoostTier(event);
     }
 
     @Override
@@ -46,9 +38,7 @@ public final class GuildBoostEventListener extends ListenerAdapter {
                 event.getGuild().getName(), event.getGuild().getId()
         );
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleUpdateBoostCount(event))
-                .start();
+        handler.handleUpdateBoostCount(event);
     }
 
     @Override
@@ -58,8 +48,6 @@ public final class GuildBoostEventListener extends ListenerAdapter {
                 event.getGuild().getName(), event.getGuild().getId()
         );
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleMemberUpdateBoostTime(event))
-                .start();
+        handler.handleMemberUpdateBoostTime(event);
     }
 }

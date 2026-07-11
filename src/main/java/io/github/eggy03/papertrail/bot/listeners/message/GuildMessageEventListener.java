@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.bot.listeners.message;
 
-import io.github.eggy03.papertrail.bot.annotations.VirtualThreadFactory;
 import io.github.eggy03.papertrail.bot.handlers.message.GuildMessageEventHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -10,19 +9,14 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.util.concurrent.ThreadFactory;
-
 @Singleton
 public final class GuildMessageEventListener extends ListenerAdapter {
 
     private final @NonNull GuildMessageEventHandler handler;
-    private final @NonNull
-    @VirtualThreadFactory ThreadFactory virtualThreadFactory;
 
     @Inject
-    public GuildMessageEventListener(@NonNull GuildMessageEventHandler handler, @NonNull @VirtualThreadFactory ThreadFactory virtualThreadFactory) {
+    public GuildMessageEventListener(@NonNull GuildMessageEventHandler handler) {
         this.handler = handler;
-        this.virtualThreadFactory = virtualThreadFactory;
     }
 
     @Override
@@ -37,9 +31,7 @@ public final class GuildMessageEventListener extends ListenerAdapter {
             return;
         }
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleMessageReceivedEvent(event))
-                .start();
+        handler.handleMessageReceivedEvent(event);
     }
 
     @Override
@@ -49,15 +41,11 @@ public final class GuildMessageEventListener extends ListenerAdapter {
             return;
         }
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleMessageUpdateEvent(event))
-                .start();
+        handler.handleMessageUpdateEvent(event);
     }
 
     @Override
     public void onMessageDelete(@NonNull MessageDeleteEvent event) {
-        virtualThreadFactory
-                .newThread(() -> handler.handleMessageDeleteEvent(event))
-                .start();
+        handler.handleMessageDeleteEvent(event);
     }
 }

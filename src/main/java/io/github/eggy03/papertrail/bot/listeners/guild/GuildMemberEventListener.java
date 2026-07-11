@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.bot.listeners.guild;
 
-import io.github.eggy03.papertrail.bot.annotations.VirtualThreadFactory;
 import io.github.eggy03.papertrail.bot.handlers.guild.GuildMemberEventHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -10,8 +9,6 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.util.concurrent.ThreadFactory;
-
 // this event is not properly logged in the audit logs, hence the usage of JDA's listener is preferred
 // this event is logged in the same channel where the audit log events are logged
 @Singleton
@@ -19,15 +16,11 @@ import java.util.concurrent.ThreadFactory;
 public final class GuildMemberEventListener extends ListenerAdapter {
 
     private final @NonNull GuildMemberEventHandler handler;
-    private final @NonNull
-    @VirtualThreadFactory ThreadFactory virtualThreadFactory;
 
     @Inject
-    public GuildMemberEventListener(@NonNull GuildMemberEventHandler handler, @NonNull @VirtualThreadFactory ThreadFactory virtualThreadFactory) {
+    public GuildMemberEventListener(@NonNull GuildMemberEventHandler handler) {
         this.handler = handler;
-        this.virtualThreadFactory = virtualThreadFactory;
     }
-
 
     @Override
     public void onGuildMemberJoin(@NonNull GuildMemberJoinEvent event) {
@@ -36,9 +29,7 @@ public final class GuildMemberEventListener extends ListenerAdapter {
                 event.getGuild().getName(), event.getGuild().getId()
         );
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleGuildMemberJoin(event))
-                .start();
+        handler.handleGuildMemberJoin(event);
     }
 
     @Override
@@ -48,9 +39,7 @@ public final class GuildMemberEventListener extends ListenerAdapter {
                 event.getGuild().getName(), event.getGuild().getId()
         );
 
-        virtualThreadFactory
-                .newThread(() -> handler.handleGuildMemberRemove(event))
-                .start();
+        handler.handleGuildMemberRemove(event);
     }
 
 }
