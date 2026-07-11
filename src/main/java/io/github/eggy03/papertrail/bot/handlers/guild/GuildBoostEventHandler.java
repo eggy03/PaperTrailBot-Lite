@@ -32,7 +32,7 @@ public final class GuildBoostEventHandler {
     
     private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (guildBoostEventLogChannel.equals("DISABLE")) return;
+        if (guildBoostEventLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

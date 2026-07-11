@@ -35,7 +35,7 @@ public final class GuildMemberEventHandler {
     
     private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (guildMemberEventLogChannel.equals("DISABLE")) return;
+        if (guildMemberEventLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

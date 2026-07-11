@@ -30,7 +30,7 @@ public final class VoiceChannelStatusActionTypeHandler extends GuildAuditLogEntr
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (voiceChannelStatusActionLogChannel.equals("DISABLE")) return;
+        if (voiceChannelStatusActionLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

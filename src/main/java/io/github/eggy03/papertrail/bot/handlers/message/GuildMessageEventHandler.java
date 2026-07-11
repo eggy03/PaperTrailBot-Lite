@@ -40,7 +40,7 @@ public final class GuildMessageEventHandler {
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GenericMessageEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if(messageLogChannel.equals("DISABLE")) return;
+        if(messageLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Message Embed is empty or too long (current length: {}).", embedBuilder.length());
@@ -54,7 +54,7 @@ public final class GuildMessageEventHandler {
     }
 
     public void handleMessageReceivedEvent(@NonNull MessageReceivedEvent event) {
-        if(messageLogChannel.equals("DISABLE")) return;
+        if(messageLogChannel.equals("-1")) return;
 
         String messageId = event.getMessageId();
         String messageContent = event.getMessage().getContentDisplay();

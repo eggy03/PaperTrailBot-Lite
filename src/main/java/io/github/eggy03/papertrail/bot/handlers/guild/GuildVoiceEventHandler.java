@@ -30,7 +30,7 @@ public final class GuildVoiceEventHandler {
     
     private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (guildVoiceEventLogChannel.equals("DISABLE")) return;
+        if (guildVoiceEventLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

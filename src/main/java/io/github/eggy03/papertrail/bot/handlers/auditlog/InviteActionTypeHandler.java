@@ -33,7 +33,7 @@ public final class InviteActionTypeHandler extends GuildAuditLogEntryCreateEvent
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (inviteActionLogChannel.equals("DISABLE")) return;
+        if (inviteActionLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

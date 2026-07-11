@@ -30,7 +30,7 @@ public final class IntegrationActionTypeHandler extends GuildAuditLogEntryCreate
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (integrationActionLogChannel.equals("DISABLE")) return;
+        if (integrationActionLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

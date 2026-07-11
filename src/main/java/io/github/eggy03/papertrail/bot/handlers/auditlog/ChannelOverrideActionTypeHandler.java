@@ -34,7 +34,7 @@ public final class ChannelOverrideActionTypeHandler extends GuildAuditLogEntryCr
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (channelOverrideActionLogChannel.equals("DISABLE")) return;
+        if (channelOverrideActionLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

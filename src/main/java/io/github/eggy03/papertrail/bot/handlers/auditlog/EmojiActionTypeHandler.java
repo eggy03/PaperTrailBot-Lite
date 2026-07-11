@@ -30,7 +30,7 @@ public final class EmojiActionTypeHandler extends GuildAuditLogEntryCreateEventA
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (emojiActionLogChannel.equals("DISABLE")) return;
+        if (emojiActionLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

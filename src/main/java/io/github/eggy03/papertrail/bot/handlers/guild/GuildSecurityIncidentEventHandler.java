@@ -33,7 +33,7 @@ public final class GuildSecurityIncidentEventHandler {
     
     private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildUpdateEvent<?> event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (guildSecurityIncidentEventChannel.equals("DISABLE")) return;
+        if (guildSecurityIncidentEventChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());

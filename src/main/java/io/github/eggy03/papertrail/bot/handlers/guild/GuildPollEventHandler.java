@@ -30,7 +30,7 @@ public final class GuildPollEventHandler {
     
     private void performChecksThenBuildAndSendEmbed(@NonNull MessageReceivedEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-        if (guildPollEventLogChannel.equals("DISABLE")) return;
+        if (guildPollEventLogChannel.equals("-1")) return;
 
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
