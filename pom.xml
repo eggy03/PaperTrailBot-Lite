@@ -53,6 +53,12 @@
             <artifactId>quarkus-arc</artifactId>
         </dependency>
 
+        <!-- Cache -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-cache</artifactId>
+        </dependency>
+
         <!-- Jackson -->
         <dependency>
             <groupId>io.quarkus</groupId>

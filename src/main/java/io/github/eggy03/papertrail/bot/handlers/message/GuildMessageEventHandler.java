@@ -1,10 +1,8 @@
 package io.github.eggy03.papertrail.bot.handlers.message;
 
 import com.google.common.base.Splitter;
-import io.github.eggy03.papertrail.sdk.client.MessageLogContentClient;
-import io.github.eggy03.papertrail.sdk.client.MessageLogRegistrationClient;
-import io.github.eggy03.papertrail.sdk.entity.MessageLogContentEntity;
-import io.github.eggy03.papertrail.sdk.entity.MessageLogRegistrationEntity;
+import io.github.eggy03.papertrail.bot.configuration.MessageCacheConfiguration;
+import io.github.eggy03.papertrail.bot.entity.CachedMessage;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -17,118 +15,106 @@ import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
 @Slf4j
 public final class GuildMessageEventHandler {
 
-    private final @NonNull MessageLogRegistrationClient registrationClient;
-    private final @NonNull MessageLogContentClient contentClient;
+    private final @NonNull String messageLogChannel;
+    private final @NonNull MessageCacheConfiguration messageCache;
 
     @Inject
-    public GuildMessageEventHandler(@NonNull MessageLogRegistrationClient registrationClient, @NonNull MessageLogContentClient contentClient) {
-        this.registrationClient = registrationClient;
-        this.contentClient = contentClient;
+    public GuildMessageEventHandler(
+            @ConfigProperty(name = "global.message.log.channel") @NonNull String messageLogChannel,
+            @NonNull MessageCacheConfiguration messageCache)
+    {
+        this.messageLogChannel = messageLogChannel;
+        this.messageCache = messageCache;
     }
 
-    private boolean isGuildRegistered(@NonNull String guildId) {
-        return registrationClient.getRegisteredGuild(guildId).isPresent();
-    }
 
-    @NonNull
-    private String getRegisteredChannelId(@NonNull String guildId) {
-        return registrationClient.getRegisteredGuild(guildId)
-                .map(MessageLogRegistrationEntity::getChannelId).orElse(StringUtils.EMPTY);
+    private void performChecksThenBuildAndSendEmbed(@NonNull GenericMessageEvent event, @NonNull EmbedBuilder embedBuilder) {
 
-    }
+        if(messageLogChannel.equals("DISABLE")) return;
 
-    private void performChecksThenBuildAndSendEmbed(@NonNull GenericMessageEvent event, @NonNull EmbedBuilder embedBuilder, @NonNull String channelIdToSendTo) {
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Message Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelIdToSendTo);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(messageLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }
     }
 
     public void handleMessageReceivedEvent(@NonNull MessageReceivedEvent event) {
-        if (!isGuildRegistered(event.getGuild().getId()))
-            return;
+        if(messageLogChannel.equals("DISABLE")) return;
 
         String messageId = event.getMessageId();
         String messageContent = event.getMessage().getContentDisplay();
         String authorId = event.getAuthor().getId();
 
-        contentClient.logMessage(messageId, messageContent, authorId);
+        messageCache.put(new CachedMessage(messageId, messageContent, authorId));
     }
 
     public void handleMessageUpdateEvent(@NonNull MessageUpdateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank())
-            return;
 
-        // fetch the old message object from the API
-        Optional<MessageLogContentEntity> oldMessageContentOptional = contentClient.retrieveMessage(event.getMessageId());
-        if (oldMessageContentOptional.isEmpty())
+        // fetch the old cached message if present
+        CachedMessage oldCachedMessage = messageCache.get(event.getMessageId());
+        if (oldCachedMessage == null) {
+            messageCache.put(new CachedMessage(event.getMessageId(), event.getMessage().getContentDisplay(), event.getAuthor().getId()));
             return;
+        }
 
-        MessageLogContentEntity oldMessageContentEntity = oldMessageContentOptional.get();
-        // Fetch the old message
-        String oldMessage = oldMessageContentEntity.getMessageContent();
-        // fetch the updated message and its author from the event
-        String updatedMessage = event.getMessage().getContentDisplay();
+        // Fetch the old message content
+        String oldMessageContent = oldCachedMessage.messageContent();
+        // fetch the updated message content and its author from the event
+        String updatedMessageContent = event.getMessage().getContentDisplay();
         String updatedMessageAuthor = event.getAuthor().getAsMention();
 
         // Ignore events where the message content wasn't edited (e.g., pin, embed resolve, thread creates and updates)
         // This is required since MessageUpdateEvent is triggered in case of pins and embed resolves with no change to content
-        if (updatedMessage.equals(oldMessage))
+        if (updatedMessageContent.equals(oldMessageContent))
             return;
 
         // Splitting is required because each field in an embed can display only up-to 1024 characters
         // A full embed can display up-to 6000 characters
-        List<String> oldMessageSplits = Splitter.fixedLength(1000).splitToList(oldMessage);
-        List<String> updatedMessageSplits = Splitter.fixedLength(1000).splitToList(updatedMessage);
+        List<String> oldMessageContentSplits = Splitter.fixedLength(1000).splitToList(oldMessageContent);
+        List<String> updatedMessageContentSplits = Splitter.fixedLength(1000).splitToList(updatedMessageContent);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Message Edit Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Author: " + updatedMessageAuthor + "\n" + "Channel: " + event.getChannel().getAsMention()));
         eb.setColor(Color.YELLOW);
 
-        oldMessageSplits.forEach(split -> eb.addField(MarkdownUtil.underline("Old Message"), MarkdownUtil.codeblock(split), false));
-        updatedMessageSplits.forEach(split -> eb.addField(MarkdownUtil.underline("New Message"), MarkdownUtil.codeblock(split), false));
+        oldMessageContentSplits.forEach(split -> eb.addField(MarkdownUtil.underline("Old Message"), MarkdownUtil.codeblock(split), false));
+        updatedMessageContentSplits.forEach(split -> eb.addField(MarkdownUtil.underline("New Message"), MarkdownUtil.codeblock(split), false));
 
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        // update the database with the new message
-        contentClient.updateMessage(event.getMessageId(), updatedMessage, event.getAuthor().getId());
+        // update the cache with the new message
+        messageCache.put(new CachedMessage(oldCachedMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     public void handleMessageDeleteEvent(@NonNull MessageDeleteEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank())
+
+        // fetch the old cached message if present
+        CachedMessage oldCachedMessage = messageCache.get(event.getMessageId());
+        if (oldCachedMessage == null)
             return;
 
-        // fetch the message object from the API which was just deleted
-        Optional<MessageLogContentEntity> deletedMessageContentOptional = contentClient.retrieveMessage(event.getMessageId());
-        if (deletedMessageContentOptional.isEmpty())
-            return;
-
-        MessageLogContentEntity deletedMessageContentEntity = deletedMessageContentOptional.get();
         // Fetch the deleted message and it's author id
-        String deletedMessage = deletedMessageContentEntity.getMessageContent();
-        String deletedMessageAuthorId = deletedMessageContentEntity.getAuthorId();
+        String deletedMessage = oldCachedMessage.messageContent();
+        String deletedMessageAuthorId = oldCachedMessage.authorId();
 
         User author = event.getJDA().getUserById(deletedMessageAuthorId);
         String mentionableAuthor = (author != null ? author.getAsMention() : deletedMessageAuthorId);
@@ -147,8 +133,8 @@ public final class GuildMessageEventHandler {
         eb.setTimestamp(Instant.now());
 
         // delete the message from the database
-        contentClient.deleteMessage(event.getMessageId());
+        messageCache.delete(event.getMessageId());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 }
