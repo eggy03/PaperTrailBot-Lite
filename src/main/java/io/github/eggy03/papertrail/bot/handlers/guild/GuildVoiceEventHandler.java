@@ -1,7 +1,5 @@
 package io.github.eggy03.papertrail.bot.handlers.guild;
 
-import io.github.eggy03.papertrail.sdk.client.AuditLogRegistrationClient;
-import io.github.eggy03.papertrail.sdk.entity.AuditLogRegistrationEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -13,7 +11,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -22,27 +20,21 @@ import java.time.Instant;
 @Slf4j
 public final class GuildVoiceEventHandler {
 
-    private final @NonNull AuditLogRegistrationClient client;
+    private final @NonNull String channel;
 
     @Inject
-    public GuildVoiceEventHandler(@NonNull AuditLogRegistrationClient client) {
-        this.client = client;
+    public GuildVoiceEventHandler(@ConfigProperty(name = "guild.voice.event.log.channel") @NonNull String channel) {
+        this.channel = channel;
     }
 
-    @NonNull
-    private String getRegisteredChannelId(@NonNull String guildId) {
-        return client.getRegisteredGuild(guildId)
-                .map(AuditLogRegistrationEntity::getChannelId).orElse(StringUtils.EMPTY);
-
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder, @NonNull String channelIdToSendTo) {
+    
+    private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelIdToSendTo);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(channel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }
@@ -50,9 +42,7 @@ public final class GuildVoiceEventHandler {
 
     public void handleVoiceUpdateEvent(@NonNull GuildVoiceUpdateEvent event) {
 
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         Member member = event.getMember();
         AudioChannel left = event.getOldValue(); // can be null if user joined for first time
         AudioChannel joined = event.getNewValue(); // can be null if user left
@@ -95,6 +85,6 @@ public final class GuildVoiceEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 }

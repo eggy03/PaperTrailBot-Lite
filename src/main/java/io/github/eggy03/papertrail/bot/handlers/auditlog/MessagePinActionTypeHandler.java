@@ -2,8 +2,7 @@ package io.github.eggy03.papertrail.bot.handlers.auditlog;
 
 import io.github.eggy03.papertrail.bot.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
 import io.github.eggy03.papertrail.bot.utils.auditlog.MessageUtils;
-import io.github.eggy03.papertrail.sdk.client.AuditLogRegistrationClient;
-import io.github.eggy03.papertrail.sdk.entity.AuditLogRegistrationEntity;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -14,7 +13,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -23,27 +22,20 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class MessagePinActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull AuditLogRegistrationClient client;
+    private final @NonNull String messagePinActionLogChannel;
 
     @Inject
-    public MessagePinActionTypeHandler(@NonNull AuditLogRegistrationClient client) {
-        this.client = client;
+    public MessagePinActionTypeHandler(@ConfigProperty(name = "message.pin.action.log.channel") @NonNull String messagePinActionLogChannel) {
+        this.messagePinActionLogChannel = messagePinActionLogChannel;
     }
 
-    @NonNull
-    private String getRegisteredChannelId(@NonNull String guildId) {
-        return client.getRegisteredGuild(guildId)
-                .map(AuditLogRegistrationEntity::getChannelId).orElse(StringUtils.EMPTY);
-
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder, @NonNull String channelIdToSendTo) {
+    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelIdToSendTo);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(messagePinActionLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }
@@ -51,9 +43,7 @@ public final class MessagePinActionTypeHandler extends GuildAuditLogEntryCreateE
 
     @Override
     public void onMessagePin(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -77,14 +67,12 @@ public final class MessagePinActionTypeHandler extends GuildAuditLogEntryCreateE
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     @Override
     public void onMessageUnpin(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -108,6 +96,6 @@ public final class MessagePinActionTypeHandler extends GuildAuditLogEntryCreateE
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 }

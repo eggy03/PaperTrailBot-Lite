@@ -1,8 +1,7 @@
 package io.github.eggy03.papertrail.bot.handlers.auditlog;
 
 import io.github.eggy03.papertrail.bot.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
-import io.github.eggy03.papertrail.sdk.client.AuditLogRegistrationClient;
-import io.github.eggy03.papertrail.sdk.entity.AuditLogRegistrationEntity;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -13,7 +12,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -22,27 +21,20 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class MessageActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull AuditLogRegistrationClient client;
+    private final @NonNull String messageActionLogChannel;
 
     @Inject
-    public MessageActionTypeHandler(@NonNull AuditLogRegistrationClient client) {
-        this.client = client;
+    public MessageActionTypeHandler(@ConfigProperty(name = "message.action.log.channel") @NonNull String messageActionLogChannel) {
+        this.messageActionLogChannel = messageActionLogChannel;
     }
 
-    @NonNull
-    private String getRegisteredChannelId(@NonNull String guildId) {
-        return client.getRegisteredGuild(guildId)
-                .map(AuditLogRegistrationEntity::getChannelId).orElse(StringUtils.EMPTY);
-
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder, @NonNull String channelIdToSendTo) {
+    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelIdToSendTo);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(messageActionLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }
@@ -62,9 +54,7 @@ public final class MessageActionTypeHandler extends GuildAuditLogEntryCreateEven
 
     @Override
     public void onMessageDelete(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -78,14 +68,12 @@ public final class MessageActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     @Override
     public void onMessageBulkDelete(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -99,6 +87,6 @@ public final class MessageActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 }

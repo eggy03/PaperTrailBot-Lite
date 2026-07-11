@@ -1,7 +1,5 @@
 package io.github.eggy03.papertrail.bot.handlers.guild;
 
-import io.github.eggy03.papertrail.sdk.client.AuditLogRegistrationClient;
-import io.github.eggy03.papertrail.sdk.entity.AuditLogRegistrationEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -15,7 +13,7 @@ import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTime
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -25,36 +23,27 @@ import java.time.OffsetDateTime;
 @Slf4j
 public final class GuildBoostEventHandler {
 
-    private final @NonNull AuditLogRegistrationClient client;
+    private final @NonNull String channel;
 
     @Inject
-    public GuildBoostEventHandler(@NonNull AuditLogRegistrationClient client) {
-        this.client = client;
+    public GuildBoostEventHandler(@ConfigProperty(name = "guild.boost.event.log.channel") @NonNull String channel) {
+        this.channel = channel;
     }
-
-    @NonNull
-    private String getRegisteredChannelId(@NonNull String guildId) {
-        return client.getRegisteredGuild(guildId)
-                .map(AuditLogRegistrationEntity::getChannelId).orElse(StringUtils.EMPTY);
-
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder, @NonNull String channelIdToSendTo) {
+    
+    private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelIdToSendTo);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(channel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }
     }
 
     public void handleUpdateBoostTier(@NonNull GuildUpdateBoostTierEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         Guild guild = event.getGuild();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -82,13 +71,11 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     public void handleUpdateBoostCount(@NonNull GuildUpdateBoostCountEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         Guild guild = event.getGuild();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -103,13 +90,11 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     public void handleMemberUpdateBoostTime(@NonNull GuildMemberUpdateBoostTimeEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         Member member = event.getMember();
         Guild guild = event.getGuild();
 
@@ -132,6 +117,6 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 }

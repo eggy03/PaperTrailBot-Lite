@@ -2,8 +2,7 @@ package io.github.eggy03.papertrail.bot.handlers.auditlog;
 
 import io.github.eggy03.papertrail.bot.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
 import io.github.eggy03.papertrail.bot.utils.auditlog.StickerUtils;
-import io.github.eggy03.papertrail.sdk.client.AuditLogRegistrationClient;
-import io.github.eggy03.papertrail.sdk.entity.AuditLogRegistrationEntity;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -15,7 +14,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.sticker.GuildSticker;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -24,27 +23,20 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class StickerActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull AuditLogRegistrationClient client;
+    private final @NonNull String stickerActionLogChannel;
 
     @Inject
-    public StickerActionTypeHandler(@NonNull AuditLogRegistrationClient client) {
-        this.client = client;
+    public StickerActionTypeHandler(@ConfigProperty(name = "sticker.action.log.channel") @NonNull String stickerActionLogChannel) {
+        this.stickerActionLogChannel = stickerActionLogChannel;
     }
 
-    @NonNull
-    private String getRegisteredChannelId(@NonNull String guildId) {
-        return client.getRegisteredGuild(guildId)
-                .map(AuditLogRegistrationEntity::getChannelId).orElse(StringUtils.EMPTY);
-
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder, @NonNull String channelIdToSendTo) {
+    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelIdToSendTo);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(stickerActionLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }
@@ -52,9 +44,7 @@ public final class StickerActionTypeHandler extends GuildAuditLogEntryCreateEven
 
     @Override
     public void onStickerCreate(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -95,14 +85,12 @@ public final class StickerActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     @Override
     public void onStickerUpdate(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -149,14 +137,12 @@ public final class StickerActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     @Override
     public void onStickerDelete(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -197,6 +183,6 @@ public final class StickerActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 }

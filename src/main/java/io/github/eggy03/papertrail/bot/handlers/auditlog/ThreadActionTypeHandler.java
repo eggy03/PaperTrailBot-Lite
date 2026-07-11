@@ -5,8 +5,7 @@ import io.github.eggy03.papertrail.bot.utils.BooleanUtils;
 import io.github.eggy03.papertrail.bot.utils.DurationUtils;
 import io.github.eggy03.papertrail.bot.utils.auditlog.ChannelUtils;
 import io.github.eggy03.papertrail.bot.utils.auditlog.ThreadUtils;
-import io.github.eggy03.papertrail.sdk.client.AuditLogRegistrationClient;
-import io.github.eggy03.papertrail.sdk.entity.AuditLogRegistrationEntity;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -18,7 +17,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -27,27 +26,20 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class ThreadActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull AuditLogRegistrationClient client;
+    private final @NonNull String threadActionLogChannel;
 
     @Inject
-    public ThreadActionTypeHandler(@NonNull AuditLogRegistrationClient client) {
-        this.client = client;
+    public ThreadActionTypeHandler(@ConfigProperty(name = "thread.action.log.channel") @NonNull String threadActionLogChannel) {
+        this.threadActionLogChannel = threadActionLogChannel;
     }
 
-    @NonNull
-    private String getRegisteredChannelId(@NonNull String guildId) {
-        return client.getRegisteredGuild(guildId)
-                .map(AuditLogRegistrationEntity::getChannelId).orElse(StringUtils.EMPTY);
-
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder, @NonNull String channelIdToSendTo) {
+    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelIdToSendTo);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(threadActionLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }
@@ -55,9 +47,7 @@ public final class ThreadActionTypeHandler extends GuildAuditLogEntryCreateEvent
 
     @Override
     public void onThreadCreate(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -110,14 +100,12 @@ public final class ThreadActionTypeHandler extends GuildAuditLogEntryCreateEvent
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     @Override
     public void onThreadUpdate(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -188,14 +176,12 @@ public final class ThreadActionTypeHandler extends GuildAuditLogEntryCreateEvent
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     @Override
     public void onThreadDelete(@NonNull GuildAuditLogEntryCreateEvent event) {
-        String channelIdToSendTo = getRegisteredChannelId(event.getGuild().getId());
-        if (channelIdToSendTo.isBlank()) return;
-
+       
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -246,6 +232,6 @@ public final class ThreadActionTypeHandler extends GuildAuditLogEntryCreateEvent
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb, channelIdToSendTo);
+        performChecksThenBuildAndSendEmbed(event, eb);
     }
 }
