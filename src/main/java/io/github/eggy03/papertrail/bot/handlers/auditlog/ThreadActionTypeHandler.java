@@ -34,6 +34,9 @@ public final class ThreadActionTypeHandler extends GuildAuditLogEntryCreateEvent
     }
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
+
+        if (threadActionLogChannel.equals("DISABLE")) return;
+
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;

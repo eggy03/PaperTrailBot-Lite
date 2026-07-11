@@ -32,11 +32,14 @@ public final class GuildUpdateActionTypeHandler extends GuildAuditLogEntryCreate
     }
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
+
+        if (guildUpdateActionLogChannel.equals("DISABLE")) return;
+
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
-
+        
         TextChannel sendingChannel = event.getGuild().getTextChannelById(guildUpdateActionLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();

@@ -25,21 +25,24 @@ import java.time.Instant;
 @Slf4j
 public final class GuildMemberEventHandler {
 
-    private final @NonNull String channel;
+    private final @NonNull String guildMemberEventLogChannel;
 
     @Inject
-    public GuildMemberEventHandler(@ConfigProperty(name = "guild.member.event.log.channel") @NonNull String channel) {
-        this.channel = channel;
+    public GuildMemberEventHandler(@ConfigProperty(name = "guild.member.event.log.channel") @NonNull String guildMemberEventLogChannel) {
+        this.guildMemberEventLogChannel = guildMemberEventLogChannel;
     }
 
     
     private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
+
+        if (guildMemberEventLogChannel.equals("DISABLE")) return;
+
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channel);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(guildMemberEventLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }

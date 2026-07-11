@@ -23,20 +23,23 @@ import java.time.OffsetDateTime;
 @Slf4j
 public final class GuildBoostEventHandler {
 
-    private final @NonNull String channel;
+    private final @NonNull String guildBoostEventLogChannel;
 
     @Inject
-    public GuildBoostEventHandler(@ConfigProperty(name = "guild.boost.event.log.channel") @NonNull String channel) {
-        this.channel = channel;
+    public GuildBoostEventHandler(@ConfigProperty(name = "guild.boost.event.log.channel") @NonNull String guildBoostEventLogChannel) {
+        this.guildBoostEventLogChannel = guildBoostEventLogChannel;
     }
     
     private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
+
+        if (guildBoostEventLogChannel.equals("DISABLE")) return;
+
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
 
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channel);
+        TextChannel sendingChannel = event.getGuild().getTextChannelById(guildBoostEventLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
         }

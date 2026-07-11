@@ -29,11 +29,14 @@ public final class EmojiActionTypeHandler extends GuildAuditLogEntryCreateEventA
     }
 
     private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
+
+        if (emojiActionLogChannel.equals("DISABLE")) return;
+
         if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
             log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
             return;
         }
-
+        
         TextChannel sendingChannel = event.getGuild().getTextChannelById(emojiActionLogChannel);
         if (sendingChannel != null && sendingChannel.canTalk()) {
             sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
