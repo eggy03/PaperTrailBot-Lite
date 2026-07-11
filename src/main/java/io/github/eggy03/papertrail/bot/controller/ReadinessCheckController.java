@@ -4,45 +4,34 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Readiness
 @ApplicationScoped
 public class ReadinessCheckController implements HealthCheck {
 
-    private final @NonNull ShardManager shardManager;
+    private final @NonNull JDA jda;
 
     @Inject
-    public ReadinessCheckController(@NonNull ShardManager shardManager) {
-        this.shardManager = shardManager;
+    public ReadinessCheckController(@NonNull JDA jda) {
+        this.jda = jda;
     }
 
     @Override
     public HealthCheckResponse call() {
 
-        if (shardManager.getStatuses().values().stream().allMatch(status -> status == JDA.Status.CONNECTED)) {
+        if (jda.getStatus() == JDA.Status.CONNECTED) {
             return HealthCheckResponse.named("Readiness Check")
-                    .withData("Shard Statuses", "All Shards are connected")
+                    .withData("JDA Readiness", "JDA is ready")
                     .up()
                     .build();
         } else {
-            String shardStatuses = shardManager.getStatuses()
-                    .values()
-                    .stream()
-                    .map(Objects::toString)
-                    .collect(Collectors.joining(", "));
-
             return HealthCheckResponse.named("Readiness Check")
-                    .withData("Shard Statuses", shardStatuses)
+                    .withData("JDA Readiness", "Preparing: " + jda.getStatus())
                     .down()
                     .build();
         }
-
     }
 }

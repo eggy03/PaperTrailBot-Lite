@@ -4,14 +4,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Liveness;
 
-import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Liveness
 @ApplicationScoped
@@ -24,30 +21,24 @@ public class LivenessCheckController implements HealthCheck {
             JDA.Status.WAITING_TO_RECONNECT
     );
 
-    private final @NonNull ShardManager shardManager;
+    private final @NonNull JDA jda;
 
     @Inject
-    public LivenessCheckController(@NonNull ShardManager shardManager) {
-        this.shardManager = shardManager;
+    public LivenessCheckController(@NonNull JDA jda) {
+        this.jda = jda;
     }
 
     @Override
     public HealthCheckResponse call() {
 
-        if (HEALTHY_STATUSES.containsAll(shardManager.getStatuses().values())) {
+        if (HEALTHY_STATUSES.contains(jda.getStatus())) {
             return HealthCheckResponse.named("Liveness Check")
-                    .withData("Shard Statuses", "All Shards are operating normally")
+                    .withData("JDA Status", "JDA is operating normally")
                     .up()
                     .build();
         } else {
-            String shardStatuses = shardManager.getStatuses()
-                    .values()
-                    .stream()
-                    .map(Objects::toString)
-                    .collect(Collectors.joining(", "));
-
             return HealthCheckResponse.named("Liveness Check")
-                    .withData("Shard Statuses", shardStatuses)
+                    .withData("JDA Status", "JDA is reporting the following status: " + jda.getStatus())
                     .down()
                     .build();
         }
