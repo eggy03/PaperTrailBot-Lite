@@ -6,67 +6,27 @@
     height="186"
   />
 
-  <h2>PaperTrail Bot</h2>
+  <h2>PaperTrail Bot Lite Edition</h2>
 </div>
-
-# Status
-
-![Latest Release](https://img.shields.io/github/v/release/eggy03/PaperTrailBot?sort=date&display_name=tag&style=for-the-badge&label=LATEST%20RELEASE)
-
-# Table of Contents
-
-* [Overview](#overview)
-* [Repositories](#repositories)
-* [Using The Bot](#using-the-bot)
-* [License](#license)
-* [Help](#help)
 
 # Overview
 
-A free and open-source, self-hostable Discord bot designed to record the changes made to a server
-and deliver them to a configured channel without the need to manually navigate to Discord's Audit Log section.
+A `LITE` edition of the original [PaperTrailBot](https://github.com/eggy03/PaperTrailBot), designed to offer more customization
+and ease of self-hosting.
 
-With support for detecting more than 72 events, it can log changes made to: AutoMod Settings, Servers, Onboarding,
-Invites, Members, Roles, Channels, Threads, Stages, Events, Polls, Messages, Boosts, Emojis, Stickers, Soundboard,
-Integrations, Webhooks, Moderation Action, Unusual DMs, Raids and Unknown events.
+Read the differences between the `LITE` and the `ORIGINAL` version
+[here](https://github.com/eggy03/PaperTrailBot/blob/main/DEPLOYMENT.md)
 
-# Repositories
+# Customization Options
 
-| Repository                                                         | Description                                                 |
-|--------------------------------------------------------------------|-------------------------------------------------------------|
-| [PaperTrailBot](https://github.com/eggy03/PaperTrailBot)           | Core bot application                                        |
-| [PaperTrail SDK](https://github.com/eggy03/papertrail-sdk)         | Java client library for interacting with the API            |
-| [PaperTrail API](https://github.com/eggy03/PaperTrail-API-Quarkus) | Backend API providing configuration and data storage        |
-| [PaperTrailBot Lite](https://github.com/eggy03/PaperTrailBot-Lite) | Lighter version of the bot requiring no additional services |
+The `LITE` edition offers greater customization than the `ORIGINAL` edition.
 
-> [!IMPORTANT]
-> PaperTrail is currently in maintenance mode. Existing bugs will be fixed, dependency updates will be provided
-> but large new features will likely not be added. However, changes will be made to keep the bot and its services
-> up to date with the latest Discord API changes.
+// TODO enlist options
 
-# Using The Bot
+# Self-Hosting Guide
 
-### By Inviting It
-
-A pre-configured and deployed instance is the easiest way to use this bot. Just invite it to your server and that's all.
-
-Get it from here: https://discord.com/discovery/applications/1381658412550590475
-
-Run the `/setup` slash command to see instructions on how to configure the bot for your server.
-
-### By Self Hosting It
-
-You can easily self-host the `LITE` version of the bot by reading the
-guide [here](https://github.com/eggy03/PaperTrailBot-Lite).
-
-You can also self-host the `ORIGINAL` version by reading the guide [here](/DEPLOYMENT.md).
-The guide also mentions the difference between the `LITE` and the `ORIGINAL` versions.
+// TODO
 
 # License
 
 This project is licensed under the [AGPLv3](/LICENSE) license.
-
-# Help
-
-If you face any problems during self-hosting or have a question that needs to be answered, please feel free to
-open an issue in the Issues tab. I will try my best to respond as soon as I can.
