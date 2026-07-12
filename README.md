@@ -83,7 +83,7 @@ cd PaperTrailBot-Lite
 ```bash
 # JVM
 docker build -t papertrail-bot-lite .
-docker run -d --name papertrail-bot --env-file .env papertrail-bot-lite
+docker run -d --name papertrail-bot-lite --env-file .env papertrail-bot-lite
 ```
 
 ```bash
@@ -191,6 +191,18 @@ Check out an example configuration [here](/.env.example)
 | `/q/health`       | Aggregated health status containing all registered checks.                                  |
 | `/q/health/live`  | Liveness probe. Verifies that the bot process is healthy and operating normally.            |
 | `/q/health/ready` | Readiness probe. Verifies that the bot is connected to Discord and ready to receive events. |
+
+# Custom Port Configuration
+
+By, default PaperTrail runs on port 8080. If port 8080 is occupied by a different service, or you wish to
+run the application on a different port, you can manually set the `PORT` environment variable. Same goes for
+`MANAGEMENT_PORT` which will expose the health check endpoints.
+
+| Variable          | Description                                           | Default Value | Optional |
+|-------------------|-------------------------------------------------------|---------------|----------|
+| `PORT`            | Port Number on which the instance of the bot will run | 8080          | Yes      |
+| `MANAGEMENT_PORT` | Port for Health Check Interface                       | 9000          | Yes      |
+
 
 # License
 
