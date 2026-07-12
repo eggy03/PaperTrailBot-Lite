@@ -1,7 +1,6 @@
 package io.github.eggy03.papertrail.lite.handlers.message;
 
 import com.google.common.base.Splitter;
-import io.github.eggy03.papertrail.lite.configuration.MessageCacheConfiguration;
 import io.github.eggy03.papertrail.lite.entity.CachedMessage;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -26,15 +25,15 @@ import java.util.List;
 public final class GuildMessageEventHandler {
 
     private final @NonNull String messageLogChannel;
-    private final @NonNull MessageCacheConfiguration messageCache;
+    private final @NonNull CaffeineMessageCacheService messageCacheService;
 
     @Inject
     public GuildMessageEventHandler(
             @ConfigProperty(name = "global.message.log.channel") @NonNull String messageLogChannel,
-            @NonNull MessageCacheConfiguration messageCache)
+            @NonNull CaffeineMessageCacheService messageCacheService)
     {
         this.messageLogChannel = messageLogChannel;
-        this.messageCache = messageCache;
+        this.messageCacheService = messageCacheService;
     }
 
 
@@ -60,15 +59,15 @@ public final class GuildMessageEventHandler {
         String messageContent = event.getMessage().getContentDisplay();
         String authorId = event.getAuthor().getId();
 
-        messageCache.put(new CachedMessage(messageId, messageContent, authorId));
+        messageCacheService.put(new CachedMessage(messageId, messageContent, authorId));
     }
 
     public void handleMessageUpdateEvent(@NonNull MessageUpdateEvent event) {
 
         // fetch the old cached message if present
-        CachedMessage oldCachedMessage = messageCache.get(event.getMessageId());
+        CachedMessage oldCachedMessage = messageCacheService.get(event.getMessageId());
         if (oldCachedMessage == null) {
-            messageCache.put(new CachedMessage(event.getMessageId(), event.getMessage().getContentDisplay(), event.getAuthor().getId()));
+            messageCacheService.put(new CachedMessage(event.getMessageId(), event.getMessage().getContentDisplay(), event.getAuthor().getId()));
             return;
         }
 
@@ -100,7 +99,7 @@ public final class GuildMessageEventHandler {
         eb.setTimestamp(Instant.now());
 
         // update the cache with the new message
-        messageCache.put(new CachedMessage(oldCachedMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
+        messageCacheService.put(new CachedMessage(oldCachedMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
 
         performChecksThenBuildAndSendEmbed(event, eb);
     }
@@ -108,7 +107,7 @@ public final class GuildMessageEventHandler {
     public void handleMessageDeleteEvent(@NonNull MessageDeleteEvent event) {
 
         // fetch the old cached message if present
-        CachedMessage oldCachedMessage = messageCache.get(event.getMessageId());
+        CachedMessage oldCachedMessage = messageCacheService.get(event.getMessageId());
         if (oldCachedMessage == null)
             return;
 
@@ -133,7 +132,7 @@ public final class GuildMessageEventHandler {
         eb.setTimestamp(Instant.now());
 
         // delete the message from the database
-        messageCache.delete(event.getMessageId());
+        messageCacheService.delete(event.getMessageId());
 
         performChecksThenBuildAndSendEmbed(event, eb);
     }

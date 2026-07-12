@@ -1,21 +1,21 @@
-package io.github.eggy03.papertrail.lite.configuration;
+package io.github.eggy03.papertrail.lite.handlers.message;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import io.github.eggy03.papertrail.lite.entity.CachedMessage;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Singleton;
 import lombok.NonNull;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 
-@ApplicationScoped
-public final class MessageCacheConfiguration {
+@Singleton
+public final class CaffeineMessageCacheService {
 
     private final @NonNull Cache<String, CachedMessage> cache;
 
-    public MessageCacheConfiguration(
+    public CaffeineMessageCacheService(
             @ConfigProperty(name = "max.cached.messages") @NonNull Long maxCachedMessages,
             @ConfigProperty(name = "max.cached.message.retention.days") @NonNull Long expireAfterWrite) {
 
