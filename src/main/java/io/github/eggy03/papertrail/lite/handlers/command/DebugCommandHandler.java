@@ -1,0 +1,125 @@
+package io.github.eggy03.papertrail.lite.handlers.command;
+
+import io.github.eggy03.papertrail.lite.about.ApplicationInfo;
+import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NonNull;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
+
+import java.awt.Color;
+import java.time.Instant;
+import java.util.EnumSet;
+import java.util.Set;
+
+@ApplicationScoped
+public final class DebugCommandHandler {
+
+    private final @NonNull ApplicationInfo applicationInfo;
+
+    // necessary permissions for the bot to function
+    @NonNull
+    private final Set<Permission> necessaryPermissions = EnumSet.of(
+            Permission.VIEW_CHANNEL,
+            Permission.VIEW_AUDIT_LOGS,
+            Permission.MANAGE_SERVER,
+            Permission.MESSAGE_SEND,
+            Permission.MESSAGE_SEND_IN_THREADS,
+            Permission.MESSAGE_EMBED_LINKS,
+            Permission.MESSAGE_HISTORY
+    );
+
+    @Inject
+    public DebugCommandHandler(@NonNull ApplicationInfo applicationInfo) {
+        this.applicationInfo = applicationInfo;
+    }
+
+    public void sendDebugInfo(@NonNull SlashCommandInteractionEvent event, @NonNull Guild guild, @NonNull Member member) {
+        GuildChannel channel = event.getGuildChannel();
+
+        // acknowledge this interaction but reply when the embed's been built
+        event.deferReply().queue();
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Debug Info");
+        eb.setDescription("Server: " + guild.getName());
+        eb.setColor(Color.GRAY);
+
+        eb.addField(MarkdownUtil.underline("Bot Permissions"), MarkdownUtil.quoteBlock(getBotPermissions(guild)), true);
+        eb.addField(MarkdownUtil.underline("Channel Permissions"), MarkdownUtil.quoteBlock(getBotPermissionsInCurrentChannel(guild, channel)), true);
+        eb.addBlankField(true);
+
+        eb.addField(MarkdownUtil.underline("Server Info"), MarkdownUtil.quoteBlock(getServerInfo(guild, channel)), true);
+        eb.addField(MarkdownUtil.underline("User Info"), MarkdownUtil.quoteBlock(getCallerInfo(member)), true);
+        eb.addBlankField(true);
+
+        eb.setFooter(applicationInfo.projectName() + " " + applicationInfo.projectVersion());
+        eb.setTimestamp(Instant.now());
+
+        event.getHook().editOriginalEmbeds(eb.build()).queue();
+    }
+
+    @NonNull
+    private String getBotPermissions(@NonNull Guild guild) {
+        return formatPermissions(guild.getSelfMember().getPermissions());
+    }
+
+    @NonNull
+    private String getBotPermissionsInCurrentChannel(@NonNull Guild guild, @NonNull GuildChannel channel) {
+        return formatPermissions(guild.getSelfMember().getPermissions(channel));
+    }
+
+    @NonNull
+    private String formatPermissions(@NonNull EnumSet<Permission> grantedGuildOrChannelPermissions) {
+        // gets all the permissions granted to the bot in the server as a whole or a particular channel
+        EnumSet<Permission> grantedPermissions = EnumSet.copyOf(grantedGuildOrChannelPermissions);
+
+        // this will
+        // 1) REMOVE the UNNECESSARY GRANTED PERMISSIONS (permissions which are granted but not required for bot to function)
+        // 2) RETAIN those GRANTED PERMISSIONS that match with the NECESSARY ONES
+        // there may be cases where GRANTED PERMISSIONS is NOT a perfect SUPERSET of NECESSARY PERMISSIONS
+        // this indicates that some NECESSARY PERMISSIONS have been DENIED
+        grantedPermissions.retainAll(necessaryPermissions);
+
+        // create a copy of necessary permissions
+        EnumSet<Permission> deniedPermissions = EnumSet.copyOf(necessaryPermissions);
+        // now if you calculate necessary - granted, you will get the set of necessary permissions which are DENIED
+        deniedPermissions.removeAll(grantedPermissions);
+
+        StringBuilder permString = new StringBuilder();
+        grantedPermissions.forEach(permission ->
+                permString.append("✅ - ")
+                        .append(permission.getName())
+                        .append("\n")
+        );
+
+        deniedPermissions.forEach(permission ->
+                permString.append("❌ - ")
+                        .append(permission.getName())
+                        .append("\n")
+        );
+
+        return permString.toString().trim();
+    }
+
+    @NonNull
+    private String getServerInfo(@NonNull Guild guild, @NonNull GuildChannel channel) {
+        return "Server Name: " + MarkdownUtil.underline(guild.getName()) + "\n" +
+                "Server ID: " + MarkdownUtil.underline(guild.getId()) + "\n" +
+                "Current Channel Name: " + MarkdownUtil.underline(channel.getName()) + "\n" +
+                "Current Channel ID: " + MarkdownUtil.underline(channel.getId());
+    }
+
+    @NonNull
+    private String getCallerInfo(@NonNull Member member) {
+        return "User Name: " + MarkdownUtil.underline(member.getUser().getEffectiveName()) + "\n" +
+                "User ID: " + MarkdownUtil.underline(member.getId()) + "\n" +
+                "Is Administrator: " + MarkdownUtil.underline(BooleanUtils.formatToYesOrNo(member.hasPermission(Permission.ADMINISTRATOR)));
+    }
+}

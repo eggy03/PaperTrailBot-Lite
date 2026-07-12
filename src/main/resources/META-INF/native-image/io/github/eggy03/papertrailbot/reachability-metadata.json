@@ -1,60 +1,6 @@
 {
   "reflection": [
     {
-      "type": "io.github.eggy03.papertrail.sdk.client.AuditLogRegistrationClient"
-    },
-    {
-      "type": "io.github.eggy03.papertrail.sdk.client.MessageLogContentClient"
-    },
-    {
-      "type": "io.github.eggy03.papertrail.sdk.client.MessageLogRegistrationClient"
-    },
-    {
-      "type": "io.github.eggy03.papertrail.sdk.entity.AuditLogRegistrationEntity",
-      "allDeclaredConstructors": true,
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true
-    },
-    {
-      "type": "io.github.eggy03.papertrail.sdk.entity.MessageLogContentEntity",
-      "allDeclaredConstructors": true,
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true
-    },
-    {
-      "type": "io.github.eggy03.papertrail.sdk.entity.MessageLogRegistrationEntity",
-      "allDeclaredConstructors": true,
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true
-    },
-    {
-      "type": "io.github.eggy03.papertrail.sdk.entity.ErrorEntity",
-      "allDeclaredConstructors": true,
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true
-    },
-    {
-      "type": {
-        "proxy": [
-          "io.github.eggy03.papertrail.sdk.service.AuditLogRegistrationService"
-        ]
-      }
-    },
-    {
-      "type": {
-        "proxy": [
-          "io.github.eggy03.papertrail.sdk.service.MessageLogRegistrationService"
-        ]
-      }
-    },
-    {
-      "type": {
-        "proxy": [
-          "io.github.eggy03.papertrail.sdk.service.MessageLogContentService"
-        ]
-      }
-    },
-    {
       "type": "net.dv8tion.jda.api.JDA[]"
     },
     {
