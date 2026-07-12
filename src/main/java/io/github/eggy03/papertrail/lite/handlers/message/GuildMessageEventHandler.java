@@ -1,8 +1,8 @@
 package io.github.eggy03.papertrail.lite.handlers.message;
 
 import com.google.common.base.Splitter;
-import io.github.eggy03.papertrail.lite.repository.MessageRepository;
-import io.github.eggy03.papertrail.lite.entity.CachedMessage;
+import io.github.eggy03.papertrail.lite.repository.GuildMessageRepository;
+import io.github.eggy03.papertrail.lite.entity.GuildMessage;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -26,15 +26,15 @@ import java.util.List;
 public final class GuildMessageEventHandler {
 
     private final @NonNull String messageLogChannel;
-    private final @NonNull MessageRepository messageCacheService;
+    private final @NonNull GuildMessageRepository repository;
 
     @Inject
     public GuildMessageEventHandler(
             @ConfigProperty(name = "global.message.log.channel") @NonNull String messageLogChannel,
-            @NonNull MessageRepository messageCacheService)
+            @NonNull GuildMessageRepository repository)
     {
         this.messageLogChannel = messageLogChannel;
-        this.messageCacheService = messageCacheService;
+        this.repository = repository;
     }
 
 
@@ -60,20 +60,20 @@ public final class GuildMessageEventHandler {
         String messageContent = event.getMessage().getContentDisplay();
         String authorId = event.getAuthor().getId();
 
-        messageCacheService.put(new CachedMessage(messageId, messageContent, authorId));
+        repository.put(new GuildMessage(messageId, messageContent, authorId));
     }
 
     public void handleMessageUpdateEvent(@NonNull MessageUpdateEvent event) {
 
-        // fetch the old cached message if present
-        CachedMessage oldCachedMessage = messageCacheService.get(event.getMessageId());
-        if (oldCachedMessage == null) {
-            messageCacheService.put(new CachedMessage(event.getMessageId(), event.getMessage().getContentDisplay(), event.getAuthor().getId()));
+        // fetch the old message if present
+        GuildMessage oldGuildMessage = repository.get(event.getMessageId());
+        if (oldGuildMessage == null) {
+            repository.put(new GuildMessage(event.getMessageId(), event.getMessage().getContentDisplay(), event.getAuthor().getId()));
             return;
         }
 
         // Fetch the old message content
-        String oldMessageContent = oldCachedMessage.messageContent();
+        String oldMessageContent = oldGuildMessage.messageContent();
         // fetch the updated message content and its author from the event
         String updatedMessageContent = event.getMessage().getContentDisplay();
         String updatedMessageAuthor = event.getAuthor().getAsMention();
@@ -100,21 +100,21 @@ public final class GuildMessageEventHandler {
         eb.setTimestamp(Instant.now());
 
         // update the repository with the new message
-        messageCacheService.put(new CachedMessage(oldCachedMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
+        repository.put(new GuildMessage(oldGuildMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
 
         performChecksThenBuildAndSendEmbed(event, eb);
     }
 
     public void handleMessageDeleteEvent(@NonNull MessageDeleteEvent event) {
 
-        // fetch the old cached message if present
-        CachedMessage oldCachedMessage = messageCacheService.get(event.getMessageId());
-        if (oldCachedMessage == null)
+        // fetch the old message if present
+        GuildMessage oldGuildMessage = repository.get(event.getMessageId());
+        if (oldGuildMessage == null)
             return;
 
         // Fetch the deleted message and it's author id
-        String deletedMessage = oldCachedMessage.messageContent();
-        String deletedMessageAuthorId = oldCachedMessage.authorId();
+        String deletedMessage = oldGuildMessage.messageContent();
+        String deletedMessageAuthorId = oldGuildMessage.authorId();
 
         User author = event.getJDA().getUserById(deletedMessageAuthorId);
         String mentionableAuthor = (author != null ? author.getAsMention() : deletedMessageAuthorId);
@@ -132,8 +132,8 @@ public final class GuildMessageEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        // delete the message from the database
-        messageCacheService.delete(event.getMessageId());
+        // delete the message from the repository
+        repository.delete(event.getMessageId());
 
         performChecksThenBuildAndSendEmbed(event, eb);
     }
