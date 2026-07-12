@@ -18,11 +18,11 @@ RUN ./mvnw -B -e -DskipTests clean package
 
 # Stage 2: Create the final Docker image using IBM Semeru Runtime
 FROM ibm-semeru-runtimes:open-25-jre-noble AS runtime
-RUN useradd -r -m papertrail-lite
+RUN useradd -r -m papertrailbot-lite
 WORKDIR /app
 VOLUME /tmp
 
 # Copy the JAR from the build stage
 COPY --from=build /app/target/quarkus-app bot
-USER papertrail
+USER papertrailbot-lite
 ENTRYPOINT ["java","-jar","bot/quarkus-run.jar"]
