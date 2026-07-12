@@ -53,10 +53,10 @@
             <artifactId>quarkus-arc</artifactId>
         </dependency>
 
-        <!-- Cache -->
+        <!-- Redis Client -->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-cache</artifactId>
+            <artifactId>quarkus-redis-client</artifactId>
         </dependency>
 
         <!-- Jackson -->

@@ -1,6 +1,7 @@
 package io.github.eggy03.papertrail.lite.handlers.message;
 
 import com.google.common.base.Splitter;
+import io.github.eggy03.papertrail.lite.repository.MessageRepository;
 import io.github.eggy03.papertrail.lite.entity.CachedMessage;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -25,12 +26,12 @@ import java.util.List;
 public final class GuildMessageEventHandler {
 
     private final @NonNull String messageLogChannel;
-    private final @NonNull CaffeineMessageCacheService messageCacheService;
+    private final @NonNull MessageRepository messageCacheService;
 
     @Inject
     public GuildMessageEventHandler(
             @ConfigProperty(name = "global.message.log.channel") @NonNull String messageLogChannel,
-            @NonNull CaffeineMessageCacheService messageCacheService)
+            @NonNull MessageRepository messageCacheService)
     {
         this.messageLogChannel = messageLogChannel;
         this.messageCacheService = messageCacheService;
@@ -98,7 +99,7 @@ public final class GuildMessageEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        // update the cache with the new message
+        // update the repository with the new message
         messageCacheService.put(new CachedMessage(oldCachedMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
 
         performChecksThenBuildAndSendEmbed(event, eb);
