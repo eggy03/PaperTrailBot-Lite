@@ -6,7 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -54,10 +53,11 @@ public final class DebugCommandHandler {
 
         eb.addField(MarkdownUtil.underline("Bot Permissions"), MarkdownUtil.quoteBlock(getBotPermissions(guild)), true);
         eb.addField(MarkdownUtil.underline("Channel Permissions"), MarkdownUtil.quoteBlock(getBotPermissionsInCurrentChannel(guild, channel)), true);
-        eb.addField(MarkdownUtil.underline("Server Info"), MarkdownUtil.quoteBlock(getServerInfo(guild, channel)), true);
+        eb.addBlankField(true);
 
+        eb.addField(MarkdownUtil.underline("Server Info"), MarkdownUtil.quoteBlock(getServerInfo(guild, channel)), true);
         eb.addField(MarkdownUtil.underline("User Info"), MarkdownUtil.quoteBlock(getCallerInfo(member)), true);
-        eb.addField(MarkdownUtil.underline("Bot Info"), MarkdownUtil.quoteBlock(getBotInfo(event)), true);
+        eb.addBlankField(true);
 
         eb.setFooter(applicationInfo.projectName() + " " + applicationInfo.projectVersion());
         eb.setTimestamp(Instant.now());
@@ -121,12 +121,5 @@ public final class DebugCommandHandler {
         return "User Name: " + MarkdownUtil.underline(member.getUser().getEffectiveName()) + "\n" +
                 "User ID: " + MarkdownUtil.underline(member.getId()) + "\n" +
                 "Is Administrator: " + MarkdownUtil.underline(BooleanUtils.formatToYesOrNo(member.hasPermission(Permission.ADMINISTRATOR)));
-    }
-
-    @NonNull
-    private String getBotInfo(@NonNull SlashCommandInteractionEvent event) {
-        JDA.ShardInfo shardInfo = event.getJDA().getShardInfo();
-        return "Current Shard ID: " + shardInfo.getShardId() + "\n" +
-                "Total Shards: " + shardInfo.getShardTotal();
     }
 }
