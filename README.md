@@ -149,6 +149,7 @@ Note that since messages are stored in-memory, they will be deleted if the bot r
 By default, all audit log events are delivered to `AUDIT_LOG_CHANNEL`.
 If you wish to route specific event categories to different channels, you can define one or more of the following
 environment variables.
+You can also set the value to `-1` to disable logging for a particular event category.
 Any event category that is not explicitly configured will continue to use the global audit log channel.
 
 | Variable                                    | Event Category                         | Default             |
