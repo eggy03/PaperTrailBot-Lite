@@ -184,6 +184,14 @@ Any event category that is not explicitly configured will continue to use the gl
 
 Check out an example configuration [here](/.env.example)
 
+# Health Check
+
+| Endpoint          | Description                                                                                 |
+|-------------------|---------------------------------------------------------------------------------------------|
+| `/q/health`       | Aggregated health status containing all registered checks.                                  |
+| `/q/health/live`  | Liveness probe. Verifies that the bot process is healthy and operating normally.            |
+| `/q/health/ready` | Readiness probe. Verifies that the bot is connected to Discord and ready to receive events. |
+
 # License
 
 This project is licensed under the [AGPLv3](/LICENSE) license.
