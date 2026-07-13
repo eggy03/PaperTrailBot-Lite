@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.listeners.auditlog;
 
+import io.github.eggy03.papertrail.lite.service.handlers.auditlog.AbstractGuildAuditLogEntryCreateEventActionTypeHandler;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -11,17 +12,17 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 /**
  * Listener responsible for receiving {@link GuildAuditLogEntryCreateEvent}
  * events from JDA and delegating them to all registered
- * {@link GuildAuditLogEntryCreateEventActionTypeHandler} CDI beans.
+ * {@link AbstractGuildAuditLogEntryCreateEventActionTypeHandler} CDI beans.
  *
  * <p>
  * Event handlers are resolved dynamically using
- * {@code Instance<GuildAuditLogEntryCreateEventActionTypeHandler>}, allowing multiple
+ * {@code Instance<AbstractGuildAuditLogEntryCreateEventActionTypeHandler>}, allowing multiple
  * independent handler implementations to process the same audit log event.
  * </p>
  *
  * <p>
  * Each discovered handler instance will receive the event through
- * {@link GuildAuditLogEntryCreateEventActionTypeHandler#handleActionType(GuildAuditLogEntryCreateEvent)}, where
+ * {@link AbstractGuildAuditLogEntryCreateEventActionTypeHandler#handleActionType(GuildAuditLogEntryCreateEvent)}, where
  * it will process the event.
  * </p>
  */
@@ -29,10 +30,10 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 @Singleton
 public final class GuildAuditLogEntryEventListener extends ListenerAdapter {
 
-    private final @NonNull Instance<GuildAuditLogEntryCreateEventActionTypeHandler> handlerInstances;
+    private final @NonNull Instance<AbstractGuildAuditLogEntryCreateEventActionTypeHandler> handlerInstances;
 
     @Inject
-    public GuildAuditLogEntryEventListener(@NonNull Instance<GuildAuditLogEntryCreateEventActionTypeHandler> handlerInstances) {
+    public GuildAuditLogEntryEventListener(@NonNull Instance<AbstractGuildAuditLogEntryCreateEventActionTypeHandler> handlerInstances) {
         this.handlerInstances = handlerInstances;
     }
 

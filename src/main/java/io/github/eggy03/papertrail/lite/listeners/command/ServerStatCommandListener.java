@@ -1,6 +1,6 @@
 package io.github.eggy03.papertrail.lite.listeners.command;
 
-import io.github.eggy03.papertrail.lite.handlers.command.ServerStatCommandHandler;
+import io.github.eggy03.papertrail.lite.service.handlers.command.ServerStatCommandHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.NonNull;
