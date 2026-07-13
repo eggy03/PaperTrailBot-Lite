@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.listeners.auditlog;
 
+import io.github.eggy03.papertrail.lite.service.handlers.auditlog.AbstractGuildAuditLogEntryCreateEventActionTypeHandler;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

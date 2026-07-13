@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
-import io.github.eggy03.papertrail.lite.listeners.auditlog.AbstractGuildAuditLogEntryCreateEventActionTypeHandler;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.auditlog.AutoModUtils;

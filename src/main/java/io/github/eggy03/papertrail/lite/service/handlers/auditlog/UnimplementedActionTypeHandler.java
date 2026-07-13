@@ -1,6 +1,5 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
-import io.github.eggy03.papertrail.lite.listeners.auditlog.AbstractGuildAuditLogEntryCreateEventActionTypeHandler;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
