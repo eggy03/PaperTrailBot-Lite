@@ -142,8 +142,6 @@ The following environment variables can be used to customize the behavior of the
 | `MESSAGE_LOG_CHANNEL`          | Default channel ID used for message logging events.                             | Disabled (`-1`)             |
 | `GUILD_MESSAGE_RETENTION_DAYS` | Number of days to retain logged messages before they are automatically removed. | `30`                        |
 
-Note that since messages are stored in-memory, they will be deleted if the bot restarts or a new instance is started.
-
 ## Audit Log Channel Overrides
 
 By default, all audit log events are delivered to `AUDIT_LOG_CHANNEL`.
