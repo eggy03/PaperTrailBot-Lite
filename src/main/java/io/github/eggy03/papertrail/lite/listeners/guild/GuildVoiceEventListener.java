@@ -1,6 +1,6 @@
 package io.github.eggy03.papertrail.lite.listeners.guild;
 
-import io.github.eggy03.papertrail.lite.handlers.guild.GuildVoiceEventHandler;
+import io.github.eggy03.papertrail.lite.service.handlers.guild.GuildVoiceEventHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.NonNull;

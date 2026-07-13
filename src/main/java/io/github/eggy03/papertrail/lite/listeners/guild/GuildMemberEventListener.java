@@ -1,6 +1,6 @@
 package io.github.eggy03.papertrail.lite.listeners.guild;
 
-import io.github.eggy03.papertrail.lite.handlers.guild.GuildMemberEventHandler;
+import io.github.eggy03.papertrail.lite.service.handlers.guild.GuildMemberEventHandler;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.NonNull;
