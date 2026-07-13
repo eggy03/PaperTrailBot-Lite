@@ -141,6 +141,7 @@ The following environment variables can be used to customize the behavior of the
 | `AUDIT_LOG_CHANNEL`            | Default channel ID used for all audit log events unless overridden.             | Disabled (`-1`)             |
 | `MESSAGE_LOG_CHANNEL`          | Default channel ID used for message logging events.                             | Disabled (`-1`)             |
 | `GUILD_MESSAGE_RETENTION_DAYS` | Number of days to retain logged messages before they are automatically removed. | `30`                        |
+| `CONSOLE_LOG_LEVEL`            | Controls the verbosity of the application's console logs.                       | `INFO`                      |
 
 ## Audit Log Channel Overrides
 

@@ -40,12 +40,14 @@ public final class GuildMessageEventHandler {
     }
 
     public void handleMessageReceivedEvent(@NonNull MessageReceivedEvent event) {
+
         if (messageLogChannel.equals("-1")) return;
 
         String messageId = event.getMessageId();
         String messageContent = event.getMessage().getContentDisplay();
         String authorId = event.getAuthor().getId();
 
+        log.debug("Message To Save: [Content: {}, Author: {}]", messageContent, event.getAuthor().getName());
         repository.put(new GuildMessage(messageId, messageContent, authorId));
     }
 
@@ -103,7 +105,7 @@ public final class GuildMessageEventHandler {
         String deletedMessageAuthorId = oldGuildMessage.authorId();
 
         User author = event.getJDA().getUserById(deletedMessageAuthorId);
-        String mentionableAuthor = (author != null ? author.getAsMention() : deletedMessageAuthorId);
+        String mentionableAuthor = author != null ? author.getAsMention() : deletedMessageAuthorId;
 
         // Splitting is required because each field in an embed can display only up-to 1024 characters
         List<String> deletedMessageSplits = Splitter.fixedLength(1000).splitToList(deletedMessage);
@@ -119,6 +121,7 @@ public final class GuildMessageEventHandler {
         eb.setTimestamp(Instant.now());
 
         // delete the message from the repository
+        log.debug("Message To Delete: [Content: {}, Author: {}]", deletedMessage, author != null ? author.getName() : deletedMessageAuthorId);
         repository.delete(event.getMessageId());
 
         embedSendingService.checkAndSend(event, eb, messageLogChannel);
