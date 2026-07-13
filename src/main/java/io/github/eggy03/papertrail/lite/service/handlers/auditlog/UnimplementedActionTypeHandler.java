@@ -1,6 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
-import io.github.eggy03.papertrail.lite.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
+import io.github.eggy03.papertrail.lite.listeners.auditlog.AbstractGuildAuditLogEntryCreateEventActionTypeHandler;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
-public final class UnimplementedActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
+public final class UnimplementedActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
     @Override
     public void onUnimplementedActionType(@NonNull GuildAuditLogEntryCreateEvent event) {

@@ -1,6 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
-import io.github.eggy03.papertrail.lite.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
+import io.github.eggy03.papertrail.lite.listeners.auditlog.AbstractGuildAuditLogEntryCreateEventActionTypeHandler;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.auditlog.StageUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,7 +19,7 @@ import java.awt.Color;
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
-public final class StageInstanceActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
+public final class StageInstanceActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
     private final @NonNull String stageInstanceActionLogChannel;
     private final @NonNull EmbedSendingService embedSendingService;

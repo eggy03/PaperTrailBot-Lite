@@ -29,7 +29,7 @@ import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
  *
  * <p>
  * If multiple subclasses are registered as CDI beans and are iterated
- * through {@code Instance<GuildAuditLogEntryCreateEventActionTypeHandler>}, each handler
+ * through {@code Instance<AbstractGuildAuditLogEntryCreateEventActionTypeHandler>}, each handler
  * instance will independently receive and process the event.
  * </p>
  *
@@ -52,7 +52,7 @@ import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
  *
  * <pre>{@code
  * @ApplicationScoped
- * public class MyHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
+ * public class MyHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
  *
  *     @Override
  *     public void onBan(@NonNull GuildAuditLogEntryCreateEvent event) {
@@ -74,7 +74,7 @@ import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
  *
  * <pre>{@code
  * @Inject
- * Instance<GuildAuditLogEntryCreateEventActionTypeHandler> eventHandlerInstance;
+ * Instance<AbstractGuildAuditLogEntryCreateEventActionTypeHandler> eventHandlerInstance;
  *
  * eventHandlerInstance.forEach(handler ->
  *     handler.handleActionType(event)
@@ -86,7 +86,7 @@ import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
  * {@link GuildAuditLogEntryEventListener}.
  * </p>
  */
-public abstract class GuildAuditLogEntryCreateEventActionTypeHandler {
+public abstract class AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
     // handler methods for ActionType
 
