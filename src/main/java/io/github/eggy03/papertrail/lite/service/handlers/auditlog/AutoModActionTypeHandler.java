@@ -1,6 +1,7 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
 import io.github.eggy03.papertrail.lite.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.auditlog.AutoModUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.automod.AutoModRule;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -24,25 +24,15 @@ import java.awt.Color;
 public final class AutoModActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
     private final @NonNull String automodChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public AutoModActionTypeHandler(@ConfigProperty(name = "automod.action.log.channel") @NonNull String automodChannel) {
+    public AutoModActionTypeHandler(
+            @ConfigProperty(name = "automod.action.log.channel") @NonNull String automodChannel,
+            @NonNull EmbedSendingService embedSendingService
+    ) {
         this.automodChannel = automodChannel;
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (automodChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(automodChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     @Override
@@ -68,7 +58,7 @@ public final class AutoModActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, automodChannel);
 
     }
 
@@ -95,7 +85,7 @@ public final class AutoModActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, automodChannel);
     }
 
     @Override
@@ -121,7 +111,7 @@ public final class AutoModActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, automodChannel);
 
     }
 
@@ -166,7 +156,7 @@ public final class AutoModActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, automodChannel);
     }
 
     @Override
@@ -192,7 +182,7 @@ public final class AutoModActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, automodChannel);
     }
 
     @Override
@@ -221,6 +211,6 @@ public final class AutoModActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, automodChannel);
     }
 }

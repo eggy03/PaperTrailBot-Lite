@@ -1,9 +1,9 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
 import io.github.eggy03.papertrail.lite.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.auditlog.OnboardingUtils;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -25,32 +24,19 @@ import java.awt.Color;
 public final class OnboardingActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
     private final @NonNull String onboardingActionLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public OnboardingActionTypeHandler(@ConfigProperty(name = "onboarding.action.log.channel") @NonNull String onboardingActionLogChannel) {
+    public OnboardingActionTypeHandler(@ConfigProperty(name = "onboarding.action.log.channel") @NonNull String onboardingActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
         this.onboardingActionLogChannel = onboardingActionLogChannel;
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (onboardingActionLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(onboardingActionLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     @Override
     public void onOnboardingCreate(@NonNull GuildAuditLogEntryCreateEvent event) {
         log.warn("Onboarding Create Event Detected. Implement this sometime later\n{}", event.getEntry().getChanges());
 
-       
+
         AuditLogEntry ale = event.getEntry();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -66,12 +52,12 @@ public final class OnboardingActionTypeHandler extends GuildAuditLogEntryCreateE
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, onboardingActionLogChannel);
     }
 
     @Override
     public void onOnboardingUpdate(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -123,6 +109,6 @@ public final class OnboardingActionTypeHandler extends GuildAuditLogEntryCreateE
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, onboardingActionLogChannel);
     }
 }

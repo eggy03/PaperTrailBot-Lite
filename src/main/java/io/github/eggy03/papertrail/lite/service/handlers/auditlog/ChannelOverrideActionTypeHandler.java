@@ -1,8 +1,8 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
 import io.github.eggy03.papertrail.lite.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.auditlog.ChannelUtils;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
@@ -26,30 +25,17 @@ import java.awt.Color;
 public final class ChannelOverrideActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
     private final @NonNull String channelOverrideActionLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public ChannelOverrideActionTypeHandler(@ConfigProperty(name = "channel.override.action.log.channel") @NonNull String channelOverrideActionLogChannel) {
+    public ChannelOverrideActionTypeHandler(@ConfigProperty(name = "channel.override.action.log.channel") @NonNull String channelOverrideActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
         this.channelOverrideActionLogChannel = channelOverrideActionLogChannel;
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (channelOverrideActionLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-        
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelOverrideActionLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     @Override
     public void onChannelOverrideCreate(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -93,12 +79,12 @@ public final class ChannelOverrideActionTypeHandler extends GuildAuditLogEntryCr
         eb.setTimestamp(ale.getTimeCreated());
 
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, channelOverrideActionLogChannel);
     }
 
     @Override
     public void onChannelOverrideUpdate(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -138,12 +124,12 @@ public final class ChannelOverrideActionTypeHandler extends GuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, channelOverrideActionLogChannel);
     }
 
     @Override
     public void onChannelOverrideDelete(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -187,7 +173,7 @@ public final class ChannelOverrideActionTypeHandler extends GuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, channelOverrideActionLogChannel);
     }
 
     // ALE changes do not expose the id and type keys in case of override updates

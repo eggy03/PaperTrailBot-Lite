@@ -1,8 +1,8 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
 import io.github.eggy03.papertrail.lite.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -23,30 +22,17 @@ import java.awt.Color;
 public final class OnboardingPromptActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
     private final @NonNull String onboardingPromptActionLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public OnboardingPromptActionTypeHandler(@ConfigProperty(name = "onboarding.prompt.action.log.channel") @NonNull String onboardingPromptActionLogChannel) {
+    public OnboardingPromptActionTypeHandler(@ConfigProperty(name = "onboarding.prompt.action.log.channel") @NonNull String onboardingPromptActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
         this.onboardingPromptActionLogChannel = onboardingPromptActionLogChannel;
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (onboardingPromptActionLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(onboardingPromptActionLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     @Override
     public void onOnboardingPromptCreate(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -93,12 +79,12 @@ public final class OnboardingPromptActionTypeHandler extends GuildAuditLogEntryC
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, onboardingPromptActionLogChannel);
     }
 
     @Override
     public void onOnboardingPromptUpdate(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -153,12 +139,12 @@ public final class OnboardingPromptActionTypeHandler extends GuildAuditLogEntryC
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, onboardingPromptActionLogChannel);
     }
 
     @Override
     public void onOnboardingPromptDelete(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -201,6 +187,6 @@ public final class OnboardingPromptActionTypeHandler extends GuildAuditLogEntryC
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, onboardingPromptActionLogChannel);
     }
 }

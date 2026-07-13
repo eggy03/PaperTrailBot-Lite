@@ -1,6 +1,7 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
 import io.github.eggy03.papertrail.lite.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -8,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -21,30 +21,17 @@ import java.awt.Color;
 public final class HomeSettingsActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
     private final @NonNull String homeSettingsActionLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public HomeSettingsActionTypeHandler(@ConfigProperty(name = "home.settings.action.log.channel") @NonNull String homeSettingsActionLogChannel) {
+    public HomeSettingsActionTypeHandler(@ConfigProperty(name = "home.settings.action.log.channel") @NonNull String homeSettingsActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
         this.homeSettingsActionLogChannel = homeSettingsActionLogChannel;
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (homeSettingsActionLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(homeSettingsActionLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     @Override
     public void onHomeSettingsCreate(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -64,12 +51,12 @@ public final class HomeSettingsActionTypeHandler extends GuildAuditLogEntryCreat
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, homeSettingsActionLogChannel);
     }
 
     @Override
     public void onHomeSettingsUpdate(@NonNull GuildAuditLogEntryCreateEvent event) {
-       
+
         AuditLogEntry ale = event.getEntry();
 
         User executor = ale.getJDA().getUserById(ale.getUserIdLong());
@@ -95,6 +82,6 @@ public final class HomeSettingsActionTypeHandler extends GuildAuditLogEntryCreat
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, homeSettingsActionLogChannel);
     }
 }

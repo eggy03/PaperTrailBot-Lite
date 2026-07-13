@@ -3,14 +3,13 @@ package io.github.eggy03.papertrail.lite.service.handlers.message;
 import com.google.common.base.Splitter;
 import io.github.eggy03.papertrail.lite.entity.GuildMessage;
 import io.github.eggy03.papertrail.lite.repository.GuildMessageRepository;
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.message.GenericMessageEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
@@ -26,35 +25,22 @@ import java.util.List;
 public final class GuildMessageEventHandler {
 
     private final @NonNull String messageLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
     private final @NonNull GuildMessageRepository repository;
 
     @Inject
     public GuildMessageEventHandler(
             @ConfigProperty(name = "global.message.log.channel") @NonNull String messageLogChannel,
-            @NonNull GuildMessageRepository repository)
-    {
+            @NonNull EmbedSendingService embedSendingService,
+            @NonNull GuildMessageRepository repository
+    ) {
         this.messageLogChannel = messageLogChannel;
+        this.embedSendingService = embedSendingService;
         this.repository = repository;
     }
 
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GenericMessageEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if(messageLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Message Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(messageLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
-    }
-
     public void handleMessageReceivedEvent(@NonNull MessageReceivedEvent event) {
-        if(messageLogChannel.equals("-1")) return;
+        if (messageLogChannel.equals("-1")) return;
 
         String messageId = event.getMessageId();
         String messageContent = event.getMessage().getContentDisplay();
@@ -102,7 +88,7 @@ public final class GuildMessageEventHandler {
         // update the repository with the new message
         repository.put(new GuildMessage(oldGuildMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, messageLogChannel);
     }
 
     public void handleMessageDeleteEvent(@NonNull MessageDeleteEvent event) {
@@ -135,6 +121,6 @@ public final class GuildMessageEventHandler {
         // delete the message from the repository
         repository.delete(event.getMessageId());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, messageLogChannel);
     }
 }

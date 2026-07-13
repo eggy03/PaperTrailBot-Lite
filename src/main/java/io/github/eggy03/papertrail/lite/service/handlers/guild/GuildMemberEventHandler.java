@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.guild;
 
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.DurationUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,8 +11,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
@@ -26,30 +25,16 @@ import java.time.Instant;
 public final class GuildMemberEventHandler {
 
     private final @NonNull String guildMemberEventLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public GuildMemberEventHandler(@ConfigProperty(name = "guild.member.event.log.channel") @NonNull String guildMemberEventLogChannel) {
+    public GuildMemberEventHandler(@ConfigProperty(name = "guild.member.event.log.channel") @NonNull String guildMemberEventLogChannel, @NonNull EmbedSendingService embedSendingService) {
         this.guildMemberEventLogChannel = guildMemberEventLogChannel;
-    }
-
-    
-    private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (guildMemberEventLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(guildMemberEventLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     public void handleGuildMemberJoin(@NonNull GuildMemberJoinEvent event) {
-       
+
         Guild guild = event.getGuild();
         User user = event.getUser();
 
@@ -68,11 +53,11 @@ public final class GuildMemberEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, guildMemberEventLogChannel);
     }
 
     public void handleGuildMemberRemove(@NonNull GuildMemberRemoveEvent event) {
-       
+
         Guild guild = event.getGuild();
         User user = event.getUser();
 
@@ -91,7 +76,7 @@ public final class GuildMemberEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, guildMemberEventLogChannel);
     }
 
     @NonNull

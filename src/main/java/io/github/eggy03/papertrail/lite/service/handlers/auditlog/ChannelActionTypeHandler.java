@@ -1,6 +1,7 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
 import io.github.eggy03.papertrail.lite.listeners.auditlog.GuildAuditLogEntryCreateEventActionTypeHandler;
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.DurationUtils;
 import io.github.eggy03.papertrail.lite.utils.auditlog.ChannelUtils;
@@ -11,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
@@ -25,25 +25,12 @@ import java.awt.Color;
 public final class ChannelActionTypeHandler extends GuildAuditLogEntryCreateEventActionTypeHandler {
 
     private final @NonNull String channelActionLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public ChannelActionTypeHandler(@ConfigProperty (name = "channel.action.log.channel") @NonNull String channelActionLogChannel) {
+    public ChannelActionTypeHandler(@ConfigProperty(name = "channel.action.log.channel") @NonNull String channelActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
         this.channelActionLogChannel = channelActionLogChannel;
-    }
-
-    private void performChecksThenBuildAndSendEmbed(@NonNull GuildAuditLogEntryCreateEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (channelActionLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(channelActionLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     @Override
@@ -101,7 +88,7 @@ public final class ChannelActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, channelActionLogChannel);
     }
 
     @Override
@@ -212,7 +199,7 @@ public final class ChannelActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, channelActionLogChannel);
     }
 
     @Override
@@ -248,6 +235,6 @@ public final class ChannelActionTypeHandler extends GuildAuditLogEntryCreateEven
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, channelActionLogChannel);
     }
 }

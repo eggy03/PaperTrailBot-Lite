@@ -1,12 +1,12 @@
 package io.github.eggy03.papertrail.lite.service.handlers.guild;
 
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.messages.MessagePoll;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
@@ -21,26 +21,12 @@ import java.time.Instant;
 public final class GuildPollEventHandler {
 
     private final @NonNull String guildPollEventLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public GuildPollEventHandler(@ConfigProperty(name = "guild.poll.event.log.channel") @NonNull String guildPollEventLogChannel) {
+    public GuildPollEventHandler(@ConfigProperty(name = "guild.poll.event.log.channel") @NonNull String guildPollEventLogChannel, @NonNull EmbedSendingService embedSendingService) {
         this.guildPollEventLogChannel = guildPollEventLogChannel;
-    }
-
-    
-    private void performChecksThenBuildAndSendEmbed(@NonNull MessageReceivedEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (guildPollEventLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(guildPollEventLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     public void handlePollCreationEvent(@NonNull MessageReceivedEvent event) {
@@ -49,7 +35,7 @@ public final class GuildPollEventHandler {
         if (messagePoll == null)
             return;
 
-       
+
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Poll Creation Event");
         eb.setColor(Color.PINK);
@@ -63,7 +49,7 @@ public final class GuildPollEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, guildPollEventLogChannel);
 
     }
 

@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.guild;
 
+import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -7,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
@@ -24,29 +23,16 @@ import java.time.OffsetDateTime;
 public final class GuildBoostEventHandler {
 
     private final @NonNull String guildBoostEventLogChannel;
+    private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public GuildBoostEventHandler(@ConfigProperty(name = "guild.boost.event.log.channel") @NonNull String guildBoostEventLogChannel) {
+    public GuildBoostEventHandler(@ConfigProperty(name = "guild.boost.event.log.channel") @NonNull String guildBoostEventLogChannel, @NonNull EmbedSendingService embedSendingService) {
         this.guildBoostEventLogChannel = guildBoostEventLogChannel;
-    }
-    
-    private void performChecksThenBuildAndSendEmbed(@NonNull GenericGuildEvent event, @NonNull EmbedBuilder embedBuilder) {
-
-        if (guildBoostEventLogChannel.equals("-1")) return;
-
-        if (!embedBuilder.isValidLength() || embedBuilder.isEmpty()) {
-            log.warn("Embed is empty or too long (current length: {}).", embedBuilder.length());
-            return;
-        }
-
-        TextChannel sendingChannel = event.getGuild().getTextChannelById(guildBoostEventLogChannel);
-        if (sendingChannel != null && sendingChannel.canTalk()) {
-            sendingChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-        }
+        this.embedSendingService = embedSendingService;
     }
 
     public void handleUpdateBoostTier(@NonNull GuildUpdateBoostTierEvent event) {
-       
+
         Guild guild = event.getGuild();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -74,11 +60,11 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, guildBoostEventLogChannel);
     }
 
     public void handleUpdateBoostCount(@NonNull GuildUpdateBoostCountEvent event) {
-       
+
         Guild guild = event.getGuild();
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -93,11 +79,11 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, guildBoostEventLogChannel);
     }
 
     public void handleMemberUpdateBoostTime(@NonNull GuildMemberUpdateBoostTimeEvent event) {
-       
+
         Member member = event.getMember();
         Guild guild = event.getGuild();
 
@@ -120,6 +106,6 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        performChecksThenBuildAndSendEmbed(event, eb);
+        embedSendingService.checkAndSend(event, eb, guildBoostEventLogChannel);
     }
 }
