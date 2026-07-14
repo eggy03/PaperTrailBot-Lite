@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.guild;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -12,7 +13,6 @@ import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTime
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -22,12 +22,12 @@ import java.time.OffsetDateTime;
 @Slf4j
 public final class GuildBoostEventHandler {
 
-    private final @NonNull String guildBoostEventLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public GuildBoostEventHandler(@ConfigProperty(name = "guild.boost.event.log.channel") @NonNull String guildBoostEventLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.guildBoostEventLogChannel = guildBoostEventLogChannel;
+    public GuildBoostEventHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -60,7 +60,7 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, guildBoostEventLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildBoostEventLogChannel());
     }
 
     public void handleUpdateBoostCount(@NonNull GuildUpdateBoostCountEvent event) {
@@ -79,7 +79,7 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, guildBoostEventLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildBoostEventLogChannel());
     }
 
     public void handleMemberUpdateBoostTime(@NonNull GuildMemberUpdateBoostTimeEvent event) {
@@ -106,6 +106,6 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, guildBoostEventLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildBoostEventLogChannel());
     }
 }

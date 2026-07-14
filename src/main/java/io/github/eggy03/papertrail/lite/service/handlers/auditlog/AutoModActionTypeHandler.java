@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.auditlog.AutoModUtils;
@@ -13,7 +14,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.automod.AutoModRule;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -22,15 +22,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String automodChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public AutoModActionTypeHandler(
-            @ConfigProperty(name = "automod.action.log.channel") @NonNull String automodChannel,
-            @NonNull EmbedSendingService embedSendingService
-    ) {
-        this.automodChannel = automodChannel;
+    public AutoModActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -57,7 +54,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, automodChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
 
     }
 
@@ -84,7 +81,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, automodChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
     }
 
     @Override
@@ -110,7 +107,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, automodChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
 
     }
 
@@ -155,7 +152,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, automodChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
     }
 
     @Override
@@ -181,7 +178,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, automodChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
     }
 
     @Override
@@ -210,6 +207,6 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, automodChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
     }
 }

@@ -1,6 +1,6 @@
 package io.github.eggy03.papertrail.lite;
 
-import io.github.eggy03.papertrail.lite.about.ApplicationInfo;
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.quarkus.runtime.Startup;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -18,34 +18,27 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Slf4j
 @ApplicationScoped
 @Startup
 public final class BootstrapService {
 
-    private final @NonNull String discordToken;
-    private final @NonNull String customActivity;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull Instance<ListenerAdapter> listeners;
     private final @NonNull JDA jda;
 
     @Inject
-    public BootstrapService(
-            @ConfigProperty(name = "discord.token") @NonNull String discordToken,
-            @ConfigProperty(name = "custom.activity") @NonNull String customActivity,
-            @NonNull Instance<ListenerAdapter> listeners, @NonNull ApplicationInfo applicationInfo
-    ) {
-        this.discordToken = discordToken;
-        this.customActivity = customActivity;
+    public BootstrapService(@NonNull Instance<ListenerAdapter> listeners, @NonNull PaperTrailConfig paperTrailConfig) {
         this.listeners = listeners;
+        this.paperTrailConfig = paperTrailConfig;
         this.jda = constructJDA();
     }
 
     @NonNull
     JDA constructJDA() {
 
-        JDABuilder builder = JDABuilder.createDefault(discordToken);
+        JDABuilder builder = JDABuilder.createDefault(paperTrailConfig.general().appDiscordToken());
 
         builder.enableIntents(GatewayIntent.SCHEDULED_EVENTS,
                 GatewayIntent.AUTO_MODERATION_EXECUTION,
@@ -76,7 +69,7 @@ public final class BootstrapService {
         builder.setStatus(OnlineStatus.ONLINE);
 
         // set activity
-        builder.setActivity(Activity.customStatus(customActivity));
+        builder.setActivity(Activity.customStatus(paperTrailConfig.general().appActivity()));
 
         // add listeners
         listeners.forEach(listener -> {

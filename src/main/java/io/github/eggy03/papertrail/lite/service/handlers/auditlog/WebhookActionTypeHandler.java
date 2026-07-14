@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.auditlog.GuildUtils;
 import io.github.eggy03.papertrail.lite.utils.auditlog.WebhookUtils;
@@ -12,7 +13,6 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -21,12 +21,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class WebhookActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String webhookActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public WebhookActionTypeHandler(@ConfigProperty(name = "webhook.action.log.channel") @NonNull String webhookActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.webhookActionLogChannel = webhookActionLogChannel;
+    public WebhookActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -68,7 +68,7 @@ public final class WebhookActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, webhookActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().webhookActionLogChannel());
     }
 
     @Override
@@ -123,7 +123,7 @@ public final class WebhookActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, webhookActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().webhookActionLogChannel());
     }
 
     @Override
@@ -164,6 +164,6 @@ public final class WebhookActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, webhookActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().webhookActionLogChannel());
     }
 }

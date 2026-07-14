@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.auditlog.StageUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -20,12 +20,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class StageInstanceActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String stageInstanceActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public StageInstanceActionTypeHandler(@ConfigProperty(name = "stage.instance.action.log.channel") @NonNull String stageInstanceActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.stageInstanceActionLogChannel = stageInstanceActionLogChannel;
+    public StageInstanceActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -62,7 +62,7 @@ public final class StageInstanceActionTypeHandler extends AbstractGuildAuditLogE
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, stageInstanceActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().stageInstanceActionLogChannel());
     }
 
     @Override
@@ -104,7 +104,7 @@ public final class StageInstanceActionTypeHandler extends AbstractGuildAuditLogE
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, stageInstanceActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().stageInstanceActionLogChannel());
     }
 
     @Override
@@ -139,6 +139,6 @@ public final class StageInstanceActionTypeHandler extends AbstractGuildAuditLogE
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, stageInstanceActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().stageInstanceActionLogChannel());
     }
 }

@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.auditlog.OnboardingUtils;
@@ -13,7 +14,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -22,19 +22,18 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class OnboardingActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String onboardingActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public OnboardingActionTypeHandler(@ConfigProperty(name = "onboarding.action.log.channel") @NonNull String onboardingActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.onboardingActionLogChannel = onboardingActionLogChannel;
+    public OnboardingActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
     @Override
     public void onOnboardingCreate(@NonNull GuildAuditLogEntryCreateEvent event) {
         log.warn("Onboarding Create Event Detected. Implement this sometime later\n{}", event.getEntry().getChanges());
-
 
         AuditLogEntry ale = event.getEntry();
 
@@ -51,7 +50,7 @@ public final class OnboardingActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, onboardingActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().onboardingActionLogChannel());
     }
 
     @Override
@@ -108,6 +107,6 @@ public final class OnboardingActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, onboardingActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().onboardingActionLogChannel());
     }
 }

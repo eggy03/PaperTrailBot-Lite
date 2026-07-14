@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -20,12 +20,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class VoiceChannelStatusActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String voiceChannelStatusActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public VoiceChannelStatusActionTypeHandler(@ConfigProperty(name = "voice.channel.status.action.log.channel") @NonNull String voiceChannelStatusActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.voiceChannelStatusActionLogChannel = voiceChannelStatusActionLogChannel;
+    public VoiceChannelStatusActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -59,7 +59,7 @@ public final class VoiceChannelStatusActionTypeHandler extends AbstractGuildAudi
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, voiceChannelStatusActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().voiceChannelStatusActionLogChannel());
     }
 
     @Override
@@ -89,6 +89,6 @@ public final class VoiceChannelStatusActionTypeHandler extends AbstractGuildAudi
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, voiceChannelStatusActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().voiceChannelStatusActionLogChannel());
     }
 }

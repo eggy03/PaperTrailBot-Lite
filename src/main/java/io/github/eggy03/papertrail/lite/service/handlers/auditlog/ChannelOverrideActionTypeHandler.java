@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.auditlog.ChannelUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,7 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -23,12 +23,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String channelOverrideActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public ChannelOverrideActionTypeHandler(@ConfigProperty(name = "channel.override.action.log.channel") @NonNull String channelOverrideActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.channelOverrideActionLogChannel = channelOverrideActionLogChannel;
+    public ChannelOverrideActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -77,8 +77,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-
-        embedSendingService.checkAndSend(event, eb, channelOverrideActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelOverrideActionLogChannel());
     }
 
     @Override
@@ -123,7 +122,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, channelOverrideActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelOverrideActionLogChannel());
     }
 
     @Override
@@ -172,7 +171,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, channelOverrideActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelOverrideActionLogChannel());
     }
 
     // ALE changes do not expose the id and type keys in case of override updates

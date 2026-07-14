@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.DurationUtils;
@@ -13,7 +14,6 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -22,12 +22,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String memberUpdateActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public MemberUpdateActionTypeHandler(@ConfigProperty(name = "member.update.action.log.channel") @NonNull String memberUpdateActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.memberUpdateActionLogChannel = memberUpdateActionLogChannel;
+    public MemberUpdateActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -89,7 +89,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, memberUpdateActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().memberUpdateActionLogChannel());
     }
 
     @Override
@@ -132,7 +132,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, memberUpdateActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().memberUpdateActionLogChannel());
     }
 
     // the audit log does not expose much information regarding member vc move and kick events
@@ -154,7 +154,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, memberUpdateActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().memberUpdateActionLogChannel());
     }
 
     // the audit log does not expose much information regarding member vc move and kick events
@@ -175,6 +175,6 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, memberUpdateActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().memberUpdateActionLogChannel());
     }
 }

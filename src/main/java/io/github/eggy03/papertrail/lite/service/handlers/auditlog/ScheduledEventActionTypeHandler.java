@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.auditlog.ScheduledEventUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -20,12 +20,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String scheduledEventActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public ScheduledEventActionTypeHandler(@ConfigProperty(name = "scheduled.event.action.log.channel") @NonNull String scheduledEventActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.scheduledEventActionLogChannel = scheduledEventActionLogChannel;
+    public ScheduledEventActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -72,7 +72,7 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         eb.setTimestamp(ale.getTimeCreated());
 
 
-        embedSendingService.checkAndSend(event, eb, scheduledEventActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().scheduledEventActionLogChannel());
     }
 
     @Override
@@ -150,7 +150,7 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         eb.setTimestamp(ale.getTimeCreated());
 
 
-        embedSendingService.checkAndSend(event, eb, scheduledEventActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().scheduledEventActionLogChannel());
     }
 
     @Override
@@ -195,6 +195,6 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, scheduledEventActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().scheduledEventActionLogChannel());
     }
 }

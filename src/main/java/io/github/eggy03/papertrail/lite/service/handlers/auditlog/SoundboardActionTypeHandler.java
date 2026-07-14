@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.auditlog.SoundboardUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -20,12 +20,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class SoundboardActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String soundboardActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public SoundboardActionTypeHandler(@ConfigProperty(name = "soundboard.action.log.channel") @NonNull String soundboardActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.soundboardActionLogChannel = soundboardActionLogChannel;
+    public SoundboardActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -71,7 +71,7 @@ public final class SoundboardActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, soundboardActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().soundboardActionLogChannel());
     }
 
     @Override
@@ -125,7 +125,7 @@ public final class SoundboardActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, soundboardActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().soundboardActionLogChannel());
     }
 
     @Override
@@ -170,6 +170,6 @@ public final class SoundboardActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, soundboardActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().soundboardActionLogChannel());
     }
 }

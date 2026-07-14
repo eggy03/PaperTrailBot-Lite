@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.DurationUtils;
@@ -13,7 +14,6 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -22,12 +22,12 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class GuildUpdateActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String guildUpdateActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public GuildUpdateActionTypeHandler(@ConfigProperty(name = "guild.update.action.log.channel") @NonNull String guildUpdateActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.guildUpdateActionLogChannel = guildUpdateActionLogChannel;
+    public GuildUpdateActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -120,7 +120,7 @@ public final class GuildUpdateActionTypeHandler extends AbstractGuildAuditLogEnt
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, guildUpdateActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildUpdateActionLogChannel());
     }
 
     @Override
@@ -152,6 +152,6 @@ public final class GuildUpdateActionTypeHandler extends AbstractGuildAuditLogEnt
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, guildUpdateActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildUpdateActionLogChannel());
     }
 }

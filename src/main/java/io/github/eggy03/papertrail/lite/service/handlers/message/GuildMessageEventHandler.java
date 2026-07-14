@@ -1,6 +1,7 @@
 package io.github.eggy03.papertrail.lite.service.handlers.message;
 
 import com.google.common.base.Splitter;
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.entity.GuildMessage;
 import io.github.eggy03.papertrail.lite.repository.GuildMessageRepository;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
@@ -14,7 +15,6 @@ import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -24,24 +24,24 @@ import java.util.List;
 @Slf4j
 public final class GuildMessageEventHandler {
 
-    private final @NonNull String messageLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
     private final @NonNull GuildMessageRepository repository;
 
     @Inject
     public GuildMessageEventHandler(
-            @ConfigProperty(name = "global.message.log.channel") @NonNull String messageLogChannel,
+            @NonNull PaperTrailConfig paperTrailConfig,
             @NonNull EmbedSendingService embedSendingService,
             @NonNull GuildMessageRepository repository
     ) {
-        this.messageLogChannel = messageLogChannel;
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
         this.repository = repository;
     }
 
     public void handleMessageReceivedEvent(@NonNull MessageReceivedEvent event) {
 
-        if (messageLogChannel.equals("-1")) return;
+        if (paperTrailConfig.messageLog().globalMessageLogChannel().equals("-1")) return;
 
         String messageId = event.getMessageId();
         String messageContent = event.getMessage().getContentDisplay();
@@ -90,7 +90,7 @@ public final class GuildMessageEventHandler {
         // update the repository with the new message
         repository.put(new GuildMessage(oldGuildMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
 
-        embedSendingService.checkAndSend(event, eb, messageLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.messageLog().globalMessageLogChannel());
     }
 
     public void handleMessageDeleteEvent(@NonNull MessageDeleteEvent event) {
@@ -124,6 +124,6 @@ public final class GuildMessageEventHandler {
         log.debug("Message To Delete: [Content: {}, Author: {}]", deletedMessage, author != null ? author.getName() : deletedMessageAuthorId);
         repository.delete(event.getMessageId());
 
-        embedSendingService.checkAndSend(event, eb, messageLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.messageLog().globalMessageLogChannel());
     }
 }

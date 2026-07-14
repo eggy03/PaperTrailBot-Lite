@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.guild;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,7 +12,6 @@ import net.dv8tion.jda.api.entities.messages.MessagePoll;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import net.dv8tion.jda.api.utils.TimeFormat;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -20,12 +20,12 @@ import java.time.Instant;
 @Slf4j
 public final class GuildPollEventHandler {
 
-    private final @NonNull String guildPollEventLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public GuildPollEventHandler(@ConfigProperty(name = "guild.poll.event.log.channel") @NonNull String guildPollEventLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.guildPollEventLogChannel = guildPollEventLogChannel;
+    public GuildPollEventHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -49,7 +49,7 @@ public final class GuildPollEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, guildPollEventLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildPollEventLogChannel());
 
     }
 

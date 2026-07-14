@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.auditlog;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,7 +11,6 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 
@@ -20,18 +20,17 @@ import java.awt.Color;
 @SuppressWarnings("java:S1192")
 public final class UnknownActionTypeHandler extends AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
-    private final @NonNull String unknownActionLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public UnknownActionTypeHandler(@ConfigProperty(name = "unknown.action.log.channel") @NonNull String unknownActionLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.unknownActionLogChannel = unknownActionLogChannel;
+    public UnknownActionTypeHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
     @Override
     public void onUnknownActionType(@NonNull GuildAuditLogEntryCreateEvent event) {
-
 
         AuditLogEntry ale = event.getEntry();
 
@@ -54,6 +53,6 @@ public final class UnknownActionTypeHandler extends AbstractGuildAuditLogEntryCr
                 )
         );
 
-        embedSendingService.checkAndSend(event, eb, unknownActionLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().unknownActionLogChannel());
     }
 }

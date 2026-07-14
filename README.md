@@ -137,7 +137,7 @@ The following environment variables can be used to customize the behavior of the
 | Variable                       | Description                                                                     | Default Value               |
 |--------------------------------|---------------------------------------------------------------------------------|-----------------------------|
 | `APP_NAME`                     | Name displayed by the bot where applicable.                                     | `PaperTrail Lite`           |
-| `CUSTOM_ACTIVITY`              | Custom activity text displayed as the bot's status.                             | Current application version |
+| `APP_ACTIVITY`                 | Custom activity text displayed as the bot's status.                             | Current application version |
 | `AUDIT_LOG_CHANNEL`            | Default channel ID used for all audit log events unless overridden.             | Disabled (`-1`)             |
 | `MESSAGE_LOG_CHANNEL`          | Default channel ID used for message logging events.                             | Disabled (`-1`)             |
 | `GUILD_MESSAGE_RETENTION_DAYS` | Number of days to retain logged messages before they are automatically removed. | `30`                        |

@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.repository;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.entity.GuildMessage;
 import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.keys.KeyCommands;
@@ -7,7 +8,6 @@ import io.quarkus.redis.datasource.value.ValueCommands;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
@@ -23,10 +23,10 @@ public final class RedisGuildMessageRepository implements GuildMessageRepository
     private static final @NonNull String KEY_PREFIX = "ptrail-lite:";
 
     @Inject
-    public RedisGuildMessageRepository(@NonNull RedisDataSource redisDataSource, @ConfigProperty(name = "guild.message.retention.days") long expireAfterDays) {
+    public RedisGuildMessageRepository(@NonNull RedisDataSource redisDataSource, @NonNull PaperTrailConfig paperTrailConfig) {
         this.keyCommands = redisDataSource.key(String.class);
         this.valueCommands = redisDataSource.value(String.class, GuildMessage.class);
-        this.retentionDuration = Duration.ofDays(expireAfterDays);
+        this.retentionDuration = Duration.ofDays(paperTrailConfig.messageLog().guildMessageRetentionDays());
     }
 
     @Override

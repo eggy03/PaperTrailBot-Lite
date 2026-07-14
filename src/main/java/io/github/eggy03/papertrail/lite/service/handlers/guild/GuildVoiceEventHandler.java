@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.guild;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,7 +11,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -19,12 +19,12 @@ import java.time.Instant;
 @Slf4j
 public final class GuildVoiceEventHandler {
 
-    private final @NonNull String guildVoiceEventLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public GuildVoiceEventHandler(@ConfigProperty(name = "guild.voice.event.log.channel") @NonNull String guildVoiceEventLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.guildVoiceEventLogChannel = guildVoiceEventLogChannel;
+    public GuildVoiceEventHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -72,6 +72,6 @@ public final class GuildVoiceEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, guildVoiceEventLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildVoiceEventLogChannel());
     }
 }
