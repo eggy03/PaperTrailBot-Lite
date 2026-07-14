@@ -68,7 +68,7 @@ public final class WebhookActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().webhookActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().webhookActionTypeLogChannel());
     }
 
     @Override
@@ -123,7 +123,7 @@ public final class WebhookActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().webhookActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().webhookActionTypeLogChannel());
     }
 
     @Override
@@ -164,6 +164,6 @@ public final class WebhookActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().webhookActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().webhookActionTypeLogChannel());
     }
 }

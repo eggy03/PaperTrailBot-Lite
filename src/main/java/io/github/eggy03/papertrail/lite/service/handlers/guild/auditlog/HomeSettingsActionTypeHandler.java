@@ -50,7 +50,7 @@ public final class HomeSettingsActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().homeSettingsActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().homeSettingsActionTypeLogChannel());
     }
 
     @Override
@@ -81,6 +81,6 @@ public final class HomeSettingsActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().homeSettingsActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().homeSettingsActionTypeLogChannel());
     }
 }

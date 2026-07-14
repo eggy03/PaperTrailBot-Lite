@@ -51,7 +51,7 @@ public final class GuildSecurityIncidentEventHandler {
             eb.setFooter(event.getGuild().getName());
             eb.setTimestamp(Instant.now());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildSecurityIncidentEventLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().securityIncidentEventLogChannel());
         }
 
         if (newDMSpamDetectedAt != null) {
@@ -63,7 +63,7 @@ public final class GuildSecurityIncidentEventHandler {
             eb.setFooter(event.getGuild().getName());
             eb.setTimestamp(Instant.now());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildSecurityIncidentEventLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().securityIncidentEventLogChannel());
         }
 
         if (oldRaidDetectedAt != null) {
@@ -75,7 +75,7 @@ public final class GuildSecurityIncidentEventHandler {
             eb.setFooter(event.getGuild().getName());
             eb.setTimestamp(Instant.now());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildSecurityIncidentEventLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().securityIncidentEventLogChannel());
         }
 
         if (newRaidDetectedAt != null) {
@@ -87,7 +87,7 @@ public final class GuildSecurityIncidentEventHandler {
             eb.setFooter(event.getGuild().getName());
             eb.setTimestamp(Instant.now());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildSecurityIncidentEventLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().securityIncidentEventLogChannel());
         }
     }
 
@@ -111,7 +111,7 @@ public final class GuildSecurityIncidentEventHandler {
             eb.setFooter(event.getGuild().getName());
             eb.setTimestamp(Instant.now());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildSecurityIncidentEventLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().securityIncidentEventLogChannel());
         }
 
         if (newDMDisabledUntil != null) {
@@ -123,7 +123,7 @@ public final class GuildSecurityIncidentEventHandler {
             eb.setFooter(event.getGuild().getName());
             eb.setTimestamp(Instant.now());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildSecurityIncidentEventLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().securityIncidentEventLogChannel());
         }
 
         if (oldInvitesPausedUntil != null) {
@@ -135,7 +135,7 @@ public final class GuildSecurityIncidentEventHandler {
             eb.setFooter(event.getGuild().getName());
             eb.setTimestamp(Instant.now());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildSecurityIncidentEventLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().securityIncidentEventLogChannel());
         }
 
         if (newInvitesPausedUntil != null) {
@@ -147,7 +147,7 @@ public final class GuildSecurityIncidentEventHandler {
             eb.setFooter(event.getGuild().getName());
             eb.setTimestamp(Instant.now());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildSecurityIncidentEventLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().securityIncidentEventLogChannel());
         }
     }
 }

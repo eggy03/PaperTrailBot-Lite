@@ -60,7 +60,7 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildBoostEventLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().boostEventLogChannel());
     }
 
     public void handleUpdateBoostCount(@NonNull GuildUpdateBoostCountEvent event) {
@@ -79,7 +79,7 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildBoostEventLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().boostEventLogChannel());
     }
 
     public void handleMemberUpdateBoostTime(@NonNull GuildMemberUpdateBoostTimeEvent event) {
@@ -106,6 +106,6 @@ public final class GuildBoostEventHandler {
         eb.setFooter(guild.getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildBoostEventLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().boostEventLogChannel());
     }
 }

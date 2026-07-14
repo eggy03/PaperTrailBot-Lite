@@ -72,7 +72,7 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         eb.setTimestamp(ale.getTimeCreated());
 
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().scheduledEventActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().scheduledEventActionTypeLogChannel());
     }
 
     @Override
@@ -150,7 +150,7 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         eb.setTimestamp(ale.getTimeCreated());
 
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().scheduledEventActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().scheduledEventActionTypeLogChannel());
     }
 
     @Override
@@ -195,6 +195,6 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().scheduledEventActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().scheduledEventActionTypeLogChannel());
     }
 }

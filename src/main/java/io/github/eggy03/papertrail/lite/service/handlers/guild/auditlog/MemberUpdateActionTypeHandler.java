@@ -89,7 +89,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().memberUpdateActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().memberUpdateActionTypeLogChannel());
     }
 
     @Override
@@ -132,7 +132,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().memberUpdateActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().memberUpdateActionTypeLogChannel());
     }
 
     // the audit log does not expose much information regarding member vc move and kick events
@@ -154,7 +154,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().memberUpdateActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().memberUpdateActionTypeLogChannel());
     }
 
     // the audit log does not expose much information regarding member vc move and kick events
@@ -175,6 +175,6 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().memberUpdateActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().memberUpdateActionTypeLogChannel());
     }
 }

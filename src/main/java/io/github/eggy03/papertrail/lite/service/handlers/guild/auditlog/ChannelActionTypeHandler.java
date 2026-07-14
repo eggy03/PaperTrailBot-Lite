@@ -87,7 +87,7 @@ public final class ChannelActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().channelActionTypeLogChannel());
     }
 
     @Override
@@ -198,7 +198,7 @@ public final class ChannelActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().channelActionTypeLogChannel());
     }
 
     @Override
@@ -234,6 +234,6 @@ public final class ChannelActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().channelActionTypeLogChannel());
     }
 }

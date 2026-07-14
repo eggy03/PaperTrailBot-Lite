@@ -53,6 +53,6 @@ public final class UnknownActionTypeHandler extends AbstractGuildAuditLogEntryCr
                 )
         );
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().unknownActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().unknownActionTypeLogChannel());
     }
 }

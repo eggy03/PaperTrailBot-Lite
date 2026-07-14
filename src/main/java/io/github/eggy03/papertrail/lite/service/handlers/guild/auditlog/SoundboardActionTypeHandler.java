@@ -71,7 +71,7 @@ public final class SoundboardActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().soundboardActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().soundboardActionTypeLogChannel());
     }
 
     @Override
@@ -125,7 +125,7 @@ public final class SoundboardActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().soundboardActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().soundboardActionTypeLogChannel());
     }
 
     @Override
@@ -170,6 +170,6 @@ public final class SoundboardActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().soundboardActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().soundboardActionTypeLogChannel());
     }
 }

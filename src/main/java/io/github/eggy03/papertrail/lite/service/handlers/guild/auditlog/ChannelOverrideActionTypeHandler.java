@@ -77,7 +77,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelOverrideActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().channelOverrideActionTypeLogChannel());
     }
 
     @Override
@@ -122,7 +122,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelOverrideActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().channelOverrideActionTypeLogChannel());
     }
 
     @Override
@@ -171,7 +171,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().channelOverrideActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().channelOverrideActionTypeLogChannel());
     }
 
     // ALE changes do not expose the id and type keys in case of override updates

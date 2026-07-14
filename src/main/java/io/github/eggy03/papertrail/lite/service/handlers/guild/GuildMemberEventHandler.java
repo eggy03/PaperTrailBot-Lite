@@ -53,7 +53,7 @@ public final class GuildMemberEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildMemberEventLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().memberEventLogChannel());
     }
 
     public void handleGuildMemberRemove(@NonNull GuildMemberRemoveEvent event) {
@@ -76,7 +76,7 @@ public final class GuildMemberEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().guildMemberEventLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().memberEventLogChannel());
     }
 
     @NonNull

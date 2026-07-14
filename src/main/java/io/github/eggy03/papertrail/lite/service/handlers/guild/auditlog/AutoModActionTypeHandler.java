@@ -54,7 +54,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().automodActionTypeLogChannel());
 
     }
 
@@ -81,7 +81,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().automodActionTypeLogChannel());
     }
 
     @Override
@@ -107,7 +107,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().automodActionTypeLogChannel());
 
     }
 
@@ -152,7 +152,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().automodActionTypeLogChannel());
     }
 
     @Override
@@ -178,7 +178,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().automodActionTypeLogChannel());
     }
 
     @Override
@@ -207,6 +207,6 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().automodActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().automodActionTypeLogChannel());
     }
 }

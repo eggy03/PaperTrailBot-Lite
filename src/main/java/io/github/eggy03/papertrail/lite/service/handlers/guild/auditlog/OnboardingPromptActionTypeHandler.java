@@ -78,7 +78,7 @@ public final class OnboardingPromptActionTypeHandler extends AbstractGuildAuditL
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().onboardingPromptActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().onboardingPromptActionTypeLogChannel());
     }
 
     @Override
@@ -138,7 +138,7 @@ public final class OnboardingPromptActionTypeHandler extends AbstractGuildAuditL
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().onboardingPromptActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().onboardingPromptActionTypeLogChannel());
     }
 
     @Override
@@ -186,6 +186,6 @@ public final class OnboardingPromptActionTypeHandler extends AbstractGuildAuditL
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().onboardingPromptActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().onboardingPromptActionTypeLogChannel());
     }
 }

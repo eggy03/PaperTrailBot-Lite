@@ -53,7 +53,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
             eb.setFooter("Audit Log Entry ID: " + ale.getId());
             eb.setTimestamp(ale.getTimeCreated());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().modActionActionLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().modActionActionTypeLogChannel());
 
         });
     }
@@ -83,7 +83,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
             eb.setFooter("Audit Log Entry ID: " + ale.getId());
             eb.setTimestamp(ale.getTimeCreated());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().modActionActionLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().modActionActionTypeLogChannel());
         });
     }
 
@@ -109,7 +109,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
             eb.setFooter("Audit Log Entry ID: " + ale.getId());
             eb.setTimestamp(ale.getTimeCreated());
 
-            embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().modActionActionLogChannel());
+            embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().modActionActionTypeLogChannel());
         });
     }
 
@@ -134,7 +134,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().modActionActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().modActionActionTypeLogChannel());
     }
 
     @Override
@@ -157,6 +157,6 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().modActionActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().modActionActionTypeLogChannel());
     }
 }

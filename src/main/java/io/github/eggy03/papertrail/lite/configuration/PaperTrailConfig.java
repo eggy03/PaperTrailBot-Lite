@@ -8,10 +8,7 @@ import lombok.NonNull;
 public interface PaperTrailConfig {
 
     General general();
-
-    AuditLog auditLog();
-
-    MessageLog messageLog();
+    Guild guild();
 
     interface General {
 
@@ -32,133 +29,140 @@ public interface PaperTrailConfig {
         String appDiscordToken();
     }
 
-    interface AuditLog {
-        // Global Audit Log Channel
-        @WithName("global.audit.log.channel")
-        @NonNull
-        String globalAuditLogChannel();
+    interface Guild {
 
-        // Audit Log Channel Overrides
-        @WithName("automod.action.log.channel")
-        @NonNull
-        String automodActionLogChannel();
+        @NonNull AuditLog auditLog();
+        @NonNull Message message();
 
-        @WithName("channel.action.log.channel")
-        @NonNull
-        String channelActionLogChannel();
+        interface AuditLog {
 
-        @WithName("channel.override.action.log.channel")
-        @NonNull
-        String channelOverrideActionLogChannel();
+            // Global Audit Log Channel
+            @WithName("global.log.channel")
+            @NonNull
+            String globalLogChannel();
 
-        @WithName("emoji.action.log.channel")
-        @NonNull
-        String emojiActionLogChannel();
+            // Audit Log Channel Overrides
+            @WithName("automod.action.type.log.channel")
+            @NonNull
+            String automodActionTypeLogChannel();
 
-        @WithName("guild.update.action.log.channel")
-        @NonNull
-        String guildUpdateActionLogChannel();
+            @WithName("channel.action.type.log.channel")
+            @NonNull
+            String channelActionTypeLogChannel();
 
-        @WithName("home.settings.action.log.channel")
-        @NonNull
-        String homeSettingsActionLogChannel();
+            @WithName("channel.override.action.type.log.channel")
+            @NonNull
+            String channelOverrideActionTypeLogChannel();
 
-        @WithName("integration.action.log.channel")
-        @NonNull
-        String integrationActionLogChannel();
+            @WithName("emoji.action.type.log.channel")
+            @NonNull
+            String emojiActionTypeLogChannel();
 
-        @WithName("invite.action.log.channel")
-        @NonNull
-        String inviteActionLogChannel();
+            @WithName("guild.update.action.type.log.channel")
+            @NonNull
+            String guildUpdateActionTypeLogChannel();
 
-        @WithName("member.update.action.log.channel")
-        @NonNull
-        String memberUpdateActionLogChannel();
+            @WithName("home.settings.action.type.log.channel")
+            @NonNull
+            String homeSettingsActionTypeLogChannel();
 
-        @WithName("message.action.log.channel")
-        @NonNull
-        String messageActionLogChannel();
+            @WithName("integration.action.type.log.channel")
+            @NonNull
+            String integrationActionTypeLogChannel();
 
-        @WithName("message.pin.action.log.channel")
-        @NonNull
-        String messagePinActionLogChannel();
+            @WithName("invite.action.type.log.channel")
+            @NonNull
+            String inviteActionTypeLogChannel();
 
-        @WithName("mod.action.action.log.channel")
-        @NonNull
-        String modActionActionLogChannel();
+            @WithName("member.update.action.type.log.channel")
+            @NonNull
+            String memberUpdateActionTypeLogChannel();
 
-        @WithName("onboarding.action.log.channel")
-        @NonNull
-        String onboardingActionLogChannel();
+            @WithName("message.action.type.log.channel")
+            @NonNull
+            String messageActionTypeLogChannel();
 
-        @WithName("onboarding.prompt.action.log.channel")
-        @NonNull
-        String onboardingPromptActionLogChannel();
+            @WithName("message.pin.action.type.log.channel")
+            @NonNull
+            String messagePinActionTypeLogChannel();
 
-        @WithName("role.action.log.channel")
-        @NonNull
-        String roleActionLogChannel();
+            @WithName("mod.action.type.log.channel")
+            @NonNull
+            String modActionActionTypeLogChannel();
 
-        @WithName("scheduled.event.action.log.channel")
-        @NonNull
-        String scheduledEventActionLogChannel();
+            @WithName("onboarding.action.type.log.channel")
+            @NonNull
+            String onboardingActionTypeLogChannel();
 
-        @WithName("soundboard.action.log.channel")
-        @NonNull
-        String soundboardActionLogChannel();
+            @WithName("onboarding.prompt.action.type.log.channel")
+            @NonNull
+            String onboardingPromptActionTypeLogChannel();
 
-        @WithName("stage.instance.action.log.channel")
-        @NonNull
-        String stageInstanceActionLogChannel();
+            @WithName("role.action.type.log.channel")
+            @NonNull
+            String roleActionTypeLogChannel();
 
-        @WithName("sticker.action.log.channel")
-        @NonNull
-        String stickerActionLogChannel();
+            @WithName("scheduled.event.action.type.log.channel")
+            @NonNull
+            String scheduledEventActionTypeLogChannel();
 
-        @WithName("thread.action.log.channel")
-        @NonNull
-        String threadActionLogChannel();
+            @WithName("soundboard.action.type.log.channel")
+            @NonNull
+            String soundboardActionTypeLogChannel();
 
-        @WithName("unknown.action.log.channel")
-        @NonNull
-        String unknownActionLogChannel();
+            @WithName("stage.instance.action.type.log.channel")
+            @NonNull
+            String stageInstanceActionTypeLogChannel();
 
-        @WithName("voice.channel.status.action.log.channel")
-        @NonNull
-        String voiceChannelStatusActionLogChannel();
+            @WithName("sticker.action.type.log.channel")
+            @NonNull
+            String stickerActionTypeLogChannel();
 
-        @WithName("webhook.action.log.channel")
-        @NonNull
-        String webhookActionLogChannel();
+            @WithName("thread.action.type.log.channel")
+            @NonNull
+            String threadActionTypeLogChannel();
+
+            @WithName("unknown.action.type.log.channel")
+            @NonNull
+            String unknownActionTypeLogChannel();
+
+            @WithName("voice.channel.status.action.type.log.channel")
+            @NonNull
+            String voiceChannelStatusActionTypeLogChannel();
+
+            @WithName("webhook.action.type.log.channel")
+            @NonNull
+            String webhookActionTypeLogChannel();
+        }
+
+        interface Message {
+            @WithName("global.log.channel")
+            @NonNull
+            String globalLogChannel();
+
+            @WithName("retention.days")
+            long guildMessageRetentionDays();
+        }
 
         // guild
-        @WithName("guild.boost.event.log.channel")
+        @WithName("boost.event.log.channel")
         @NonNull
-        String guildBoostEventLogChannel();
+        String boostEventLogChannel();
 
-        @WithName("guild.member.event.log.channel")
+        @WithName("member.event.log.channel")
         @NonNull
-        String guildMemberEventLogChannel();
+        String memberEventLogChannel();
 
-        @WithName("guild.poll.event.log.channel")
+        @WithName("poll.event.log.channel")
         @NonNull
-        String guildPollEventLogChannel();
+        String pollEventLogChannel();
 
-        @WithName("guild.security.incident.event.log.channel")
+        @WithName("security.incident.event.log.channel")
         @NonNull
-        String guildSecurityIncidentEventLogChannel();
+        String securityIncidentEventLogChannel();
 
-        @WithName("guild.voice.event.log.channel")
+        @WithName("voice.event.log.channel")
         @NonNull
-        String guildVoiceEventLogChannel();
-    }
-
-    interface MessageLog {
-        @WithName("global.message.log.channel")
-        @NonNull
-        String globalMessageLogChannel();
-
-        @WithName("guild.message.retention.days")
-        long guildMessageRetentionDays();
+        String voiceEventLogChannel();
     }
 }

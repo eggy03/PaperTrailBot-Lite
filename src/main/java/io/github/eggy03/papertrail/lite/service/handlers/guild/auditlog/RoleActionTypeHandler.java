@@ -73,7 +73,7 @@ public final class RoleActionTypeHandler extends AbstractGuildAuditLogEntryCreat
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().roleActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().roleActionTypeLogChannel());
     }
 
     @Override
@@ -149,7 +149,7 @@ public final class RoleActionTypeHandler extends AbstractGuildAuditLogEntryCreat
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().roleActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().roleActionTypeLogChannel());
     }
 
     @Override
@@ -199,6 +199,6 @@ public final class RoleActionTypeHandler extends AbstractGuildAuditLogEntryCreat
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().roleActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().roleActionTypeLogChannel());
     }
 }

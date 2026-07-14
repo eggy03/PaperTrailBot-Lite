@@ -58,7 +58,7 @@ public final class EmojiActionTypeHandler extends AbstractGuildAuditLogEntryCrea
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().emojiActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().emojiActionTypeLogChannel());
     }
 
     @Override
@@ -92,7 +92,7 @@ public final class EmojiActionTypeHandler extends AbstractGuildAuditLogEntryCrea
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().emojiActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().emojiActionTypeLogChannel());
     }
 
     @Override
@@ -125,6 +125,6 @@ public final class EmojiActionTypeHandler extends AbstractGuildAuditLogEntryCrea
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().emojiActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().emojiActionTypeLogChannel());
     }
 }

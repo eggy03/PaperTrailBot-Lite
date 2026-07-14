@@ -59,7 +59,7 @@ public final class VoiceChannelStatusActionTypeHandler extends AbstractGuildAudi
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().voiceChannelStatusActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().voiceChannelStatusActionTypeLogChannel());
     }
 
     @Override
@@ -89,6 +89,6 @@ public final class VoiceChannelStatusActionTypeHandler extends AbstractGuildAudi
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.auditLog().voiceChannelStatusActionLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().voiceChannelStatusActionTypeLogChannel());
     }
 }
