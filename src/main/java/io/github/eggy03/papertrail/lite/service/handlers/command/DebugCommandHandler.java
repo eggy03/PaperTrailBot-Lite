@@ -1,6 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.command;
 
-import io.github.eggy03.papertrail.lite.about.ApplicationInfo;
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -21,7 +21,7 @@ import java.util.Set;
 @ApplicationScoped
 public final class DebugCommandHandler {
 
-    private final @NonNull ApplicationInfo applicationInfo;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
 
     // necessary permissions for the bot to function
     @NonNull
@@ -36,8 +36,8 @@ public final class DebugCommandHandler {
     );
 
     @Inject
-    public DebugCommandHandler(@NonNull ApplicationInfo applicationInfo) {
-        this.applicationInfo = applicationInfo;
+    public DebugCommandHandler(@NonNull PaperTrailConfig paperTrailConfig) {
+        this.paperTrailConfig = paperTrailConfig;
     }
 
     public void sendDebugInfo(@NonNull SlashCommandInteractionEvent event, @NonNull Guild guild, @NonNull Member member) {
@@ -59,7 +59,7 @@ public final class DebugCommandHandler {
         eb.addField(MarkdownUtil.underline("User Info"), MarkdownUtil.quoteBlock(getCallerInfo(member)), true);
         eb.addBlankField(true);
 
-        eb.setFooter(applicationInfo.projectName() + " " + applicationInfo.projectVersion());
+        eb.setFooter(paperTrailConfig.general().appName() + " " + paperTrailConfig.general().appVersion());
         eb.setTimestamp(Instant.now());
 
         event.getHook().editOriginalEmbeds(eb.build()).queue();

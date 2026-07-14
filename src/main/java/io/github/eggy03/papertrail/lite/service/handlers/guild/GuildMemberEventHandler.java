@@ -1,5 +1,6 @@
 package io.github.eggy03.papertrail.lite.service.handlers.guild;
 
+import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.service.EmbedSendingService;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
 import io.github.eggy03.papertrail.lite.utils.DurationUtils;
@@ -15,7 +16,6 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import net.dv8tion.jda.api.utils.TimeFormat;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -24,12 +24,12 @@ import java.time.Instant;
 @Slf4j
 public final class GuildMemberEventHandler {
 
-    private final @NonNull String guildMemberEventLogChannel;
+    private final @NonNull PaperTrailConfig paperTrailConfig;
     private final @NonNull EmbedSendingService embedSendingService;
 
     @Inject
-    public GuildMemberEventHandler(@ConfigProperty(name = "guild.member.event.log.channel") @NonNull String guildMemberEventLogChannel, @NonNull EmbedSendingService embedSendingService) {
-        this.guildMemberEventLogChannel = guildMemberEventLogChannel;
+    public GuildMemberEventHandler(@NonNull PaperTrailConfig paperTrailConfig, @NonNull EmbedSendingService embedSendingService) {
+        this.paperTrailConfig = paperTrailConfig;
         this.embedSendingService = embedSendingService;
     }
 
@@ -53,7 +53,7 @@ public final class GuildMemberEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, guildMemberEventLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().memberEventLogChannel());
     }
 
     public void handleGuildMemberRemove(@NonNull GuildMemberRemoveEvent event) {
@@ -76,7 +76,7 @@ public final class GuildMemberEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, guildMemberEventLogChannel);
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().memberEventLogChannel());
     }
 
     @NonNull
