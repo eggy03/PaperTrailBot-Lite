@@ -161,36 +161,36 @@ You can also set their value to `-1` to disable logging for a particular event c
 
 Any event category that is not explicitly configured will continue to use the global audit log channel.
 
-| Variable                                 | Event Category                         | Default             |
-|------------------------------------------|----------------------------------------|---------------------|
-| `GUILD_AUTOMOD_LOG_CHANNEL`              | AutoMod actions                        | `AUDIT_LOG_CHANNEL` |
-| `GUILD_CHANNEL_LOG_CHANNEL`              | Channel creation, deletion and updates | `AUDIT_LOG_CHANNEL` |
-| `GUILD_CHANNEL_OVERRIDE_LOG_CHANNEL`     | Channel permission overrides           | `AUDIT_LOG_CHANNEL` |
-| `GUILD_EMOJI_LOG_CHANNEL`                | Emoji events                           | `AUDIT_LOG_CHANNEL` |
-| `GUILD_UPDATE_LOG_CHANNEL`               | Guild updates                          | `AUDIT_LOG_CHANNEL` |
-| `GUILD_HOME_SETTINGS_LOG_CHANNEL`        | Home settings updates                  | `AUDIT_LOG_CHANNEL` |
-| `GUILD_INTEGRATION_LOG_CHANNEL`          | Integration events                     | `AUDIT_LOG_CHANNEL` |
-| `GUILD_INVITE_LOG_CHANNEL`               | Invite events                          | `AUDIT_LOG_CHANNEL` |
-| `GUILD_MEMBER_UPDATE_LOG_CHANNEL`        | Member updates                         | `AUDIT_LOG_CHANNEL` |
-| `GUILD_MESSAGE_ACTION_LOG_CHANNEL`       | Message actions                        | `AUDIT_LOG_CHANNEL` |
-| `GUILD_MESSAGE_PIN_LOG_CHANNEL`          | Message pin/unpin events               | `AUDIT_LOG_CHANNEL` |
-| `GUILD_MOD_ACTION_LOG_CHANNEL`           | Moderation actions                     | `AUDIT_LOG_CHANNEL` |
-| `GUILD_ONBOARDING_LOG_CHANNEL`           | Onboarding updates                     | `AUDIT_LOG_CHANNEL` |
-| `GUILD_ONBOARDING_PROMPT_LOG_CHANNEL`    | Onboarding prompt updates              | `AUDIT_LOG_CHANNEL` |
-| `GUILD_ROLE_LOG_CHANNEL`                 | Role events                            | `AUDIT_LOG_CHANNEL` |
-| `GUILD_SCHEDULED_EVENT_LOG_CHANNEL`      | Scheduled events                       | `AUDIT_LOG_CHANNEL` |
-| `GUILD_SOUNDBOARD_LOG_CHANNEL`           | Soundboard events                      | `AUDIT_LOG_CHANNEL` |
-| `GUILD_STAGE_INSTANCE_LOG_CHANNEL`       | Stage instance events                  | `AUDIT_LOG_CHANNEL` |
-| `GUILD_STICKER_LOG_CHANNEL`              | Sticker events                         | `AUDIT_LOG_CHANNEL` |
-| `GUILD_THREAD_LOG_CHANNEL`               | Thread events                          | `AUDIT_LOG_CHANNEL` |
-| `GUILD_UNKNOWN_LOG_CHANNEL`              | Unknown or unsupported audit events    | `AUDIT_LOG_CHANNEL` |
-| `GUILD_VOICE_CHANNEL_STATUS_LOG_CHANNEL` | Voice channel status updates           | `AUDIT_LOG_CHANNEL` |
-| `GUILD_WEBHOOK_LOG_CHANNEL`              | Webhook events                         | `AUDIT_LOG_CHANNEL` |
-| `GUILD_BOOST_LOG_CHANNEL`                | Guild boost events                     | `AUDIT_LOG_CHANNEL` |
-| `GUILD_MEMBER_LOG_CHANNEL`               | Guild member events                    | `AUDIT_LOG_CHANNEL` |
-| `GUILD_POLL_LOG_CHANNEL`                 | Poll events                            | `AUDIT_LOG_CHANNEL` |
-| `GUILD_SECURITY_INCIDENT_LOG_CHANNEL`    | Guild security incident events         | `AUDIT_LOG_CHANNEL` |
-| `GUILD_VOICE_LOG_CHANNEL`                | Voice state events                     | `AUDIT_LOG_CHANNEL` |
+| Variable                                 | Event Category                         | Default                   |
+|------------------------------------------|----------------------------------------|---------------------------|
+| `GUILD_AUTOMOD_LOG_CHANNEL`              | AutoMod actions                        | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_CHANNEL_LOG_CHANNEL`              | Channel creation, deletion and updates | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_CHANNEL_OVERRIDE_LOG_CHANNEL`     | Channel permission overrides           | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_EMOJI_LOG_CHANNEL`                | Emoji events                           | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_UPDATE_LOG_CHANNEL`               | Guild updates                          | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_HOME_SETTINGS_LOG_CHANNEL`        | Home settings updates                  | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_INTEGRATION_LOG_CHANNEL`          | Integration events                     | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_INVITE_LOG_CHANNEL`               | Invite events                          | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_MEMBER_UPDATE_LOG_CHANNEL`        | Member updates                         | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_MESSAGE_ACTION_LOG_CHANNEL`       | Message actions                        | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_MESSAGE_PIN_LOG_CHANNEL`          | Message pin/unpin events               | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_MOD_ACTION_LOG_CHANNEL`           | Moderation actions                     | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_ONBOARDING_LOG_CHANNEL`           | Onboarding updates                     | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_ONBOARDING_PROMPT_LOG_CHANNEL`    | Onboarding prompt updates              | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_ROLE_LOG_CHANNEL`                 | Role events                            | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_SCHEDULED_EVENT_LOG_CHANNEL`      | Scheduled events                       | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_SOUNDBOARD_LOG_CHANNEL`           | Soundboard events                      | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_STAGE_INSTANCE_LOG_CHANNEL`       | Stage instance events                  | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_STICKER_LOG_CHANNEL`              | Sticker events                         | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_THREAD_LOG_CHANNEL`               | Thread events                          | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_UNKNOWN_LOG_CHANNEL`              | Unknown or unsupported audit events    | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_VOICE_CHANNEL_STATUS_LOG_CHANNEL` | Voice channel status updates           | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_WEBHOOK_LOG_CHANNEL`              | Webhook events                         | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_BOOST_LOG_CHANNEL`                | Guild boost events                     | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_MEMBER_LOG_CHANNEL`               | Guild member events                    | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_POLL_LOG_CHANNEL`                 | Poll events                            | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_SECURITY_INCIDENT_LOG_CHANNEL`    | Guild security incident events         | `GUILD_AUDIT_LOG_CHANNEL` |
+| `GUILD_VOICE_LOG_CHANNEL`                | Voice state events                     | `GUILD_AUDIT_LOG_CHANNEL` |
 
 Check out an example configuration [here](/.env.example)
 
