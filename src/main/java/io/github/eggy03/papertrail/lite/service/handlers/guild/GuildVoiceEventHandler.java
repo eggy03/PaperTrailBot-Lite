@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
 import java.time.Instant;
 
 @ApplicationScoped
@@ -40,7 +39,7 @@ public final class GuildVoiceEventHandler {
         if (left == null && joined != null) {
             // User has joined a vc
             eb.setDescription("A Member Has Joined A Voice Channel");
-            eb.setColor(Color.GREEN);
+            eb.setColor(paperTrailConfig.embedColor().successColor());
             eb.addField(
                     MarkdownUtil.underline("Connection Event Metadata"),
                     MarkdownUtil.quoteBlock("Connected Member: " + member.getAsMention() + "\nJoined Channel: " + joined.getAsMention()),
@@ -51,7 +50,7 @@ public final class GuildVoiceEventHandler {
         if (left != null && joined != null) {
             // Moved from one channel to another
             eb.setDescription("A Member Has Switched Voice Channels");
-            eb.setColor(Color.YELLOW);
+            eb.setColor(paperTrailConfig.embedColor().warningColor());
             eb.addField(
                     MarkdownUtil.underline("Switch Event Metadata"),
                     MarkdownUtil.quoteBlock("Switched Member: " + member.getAsMention() + "\nLeft Channel: " + left.getAsMention() + "\nJoined Channel: " + joined.getAsMention()),
@@ -61,7 +60,7 @@ public final class GuildVoiceEventHandler {
         if (left != null && joined == null) {
             // User disconnected voluntarily (or was disconnected by a moderator)
             eb.setDescription("A Member Has Left A Voice Channel");
-            eb.setColor(Color.RED);
+            eb.setColor(paperTrailConfig.embedColor().destructiveColor());
             eb.addField(
                     MarkdownUtil.underline("Disconnection Event Metadata"),
                     MarkdownUtil.quoteBlock("Disconnected Member: " + member.getAsMention() + "\nLeft Channel: " + left.getAsMention()),

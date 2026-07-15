@@ -12,8 +12,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -45,7 +43,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("Audit Log Entry | Kick Event");
             eb.setDescription(MarkdownUtil.quoteBlock("A Member Has Been Kicked By: " + mentionableModerator));
-            eb.setColor(Color.ORANGE);
+            eb.setColor(paperTrailConfig.embedColor().warningColor());
 
             eb.addField(MarkdownUtil.underline("Kicked Member"), "╰┈➤" + mentionableKickedUser, false);
             eb.addField(MarkdownUtil.underline("Reason"), "╰┈➤" + reasonForKick, false);
@@ -75,7 +73,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("Audit Log Entry | Ban Event");
             eb.setDescription(MarkdownUtil.quoteBlock("A Member Has Been Banned By: " + mentionableModerator));
-            eb.setColor(Color.RED);
+            eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
             eb.addField(MarkdownUtil.underline("Banned Member"), "╰┈➤" + mentionableBannedUser, false);
             eb.addField(MarkdownUtil.underline("Ban Reason"), "╰┈➤" + reasonForBan, false);
@@ -102,7 +100,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("Audit Log Entry | Member Unban Event");
             eb.setDescription(MarkdownUtil.quoteBlock("A Member Has Been Un-Banned By: " + mentionableModerator));
-            eb.setColor(Color.GREEN);
+            eb.setColor(paperTrailConfig.embedColor().successColor());
 
             eb.addField(MarkdownUtil.underline("Un-banned User"), "╰┈➤" + mentionableUnbannedUser, false);
 
@@ -127,7 +125,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Bot Add Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Bot Added By: " + mentionableExecutor + "\nBot ID: " + ale.getTargetId()));
-        eb.setColor(Color.CYAN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         eb.addField(MarkdownUtil.underline("Bot Added"), "╰┈➤" + mentionableTarget, false);
 
@@ -147,7 +145,7 @@ public final class ModActionActionTypeHandler extends AbstractGuildAuditLogEntry
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Prune Event");
-        eb.setColor(Color.LIGHT_GRAY);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         String implementationNotice = "We do not have sufficient payload data to log the changes in a PRUNE Event."
                 .concat(" A proper implementation might happen in future releases");

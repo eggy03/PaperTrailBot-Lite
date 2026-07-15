@@ -16,8 +16,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -46,7 +44,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Channel Override Create");
         eb.setDescription(MarkdownUtil.quoteBlock("Override Created By: " + mentionableExecutor + "\nTarget Channel: " + targetChannelMention));
-        eb.setColor(Color.GREEN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();
@@ -94,7 +92,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Channel Override Update");
         eb.setDescription(MarkdownUtil.quoteBlock("Override Updated By: " + mentionableExecutor + "\nTarget Channel: " + targetChannelMention));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         eb.addField(MarkdownUtil.underline("Override Type"), "╰┈➤" + ChannelUtils.resolveChannelOverrideTargetType(ale.getOptionByName("type")), false);
         eb.addField(MarkdownUtil.underline("Permissions Overridden For"), "╰┈➤" + getTargetRoleOrMember(ale, event), false);
@@ -140,7 +138,7 @@ public final class ChannelOverrideActionTypeHandler extends AbstractGuildAuditLo
         eb.setTitle("Audit Log Entry | Channel Override Delete");
 
         eb.setDescription(MarkdownUtil.quoteBlock("Override Deleted By: " + mentionableExecutor + "\nTarget Channel: " + targetChannelMention));
-        eb.setColor(Color.RED);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();

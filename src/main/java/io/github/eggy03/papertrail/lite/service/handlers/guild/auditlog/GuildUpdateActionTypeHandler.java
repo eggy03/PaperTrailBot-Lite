@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -42,7 +40,7 @@ public final class GuildUpdateActionTypeHandler extends AbstractGuildAuditLogEnt
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Guild Update Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Guild Settings Updated By: " + mentionableExecutor + "\nTarget Guild: " + event.getGuild().getName()));
-        eb.setColor(Color.MAGENTA);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
@@ -134,7 +132,7 @@ public final class GuildUpdateActionTypeHandler extends AbstractGuildAuditLogEnt
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Guild Profile Update Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Guild Profile Updated By: " + mentionableExecutor + "\nTarget Guild: " + event.getGuild().getName()));
-        eb.setColor(Color.PINK);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         ale.getChanges().keySet().forEach(key -> {
             switch (key) {

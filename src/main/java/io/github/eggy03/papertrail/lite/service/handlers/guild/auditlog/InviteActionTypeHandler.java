@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -43,7 +41,7 @@ public final class InviteActionTypeHandler extends AbstractGuildAuditLogEntryCre
         eb.setTitle("Audit Log Entry | Invite Create Event");
 
         eb.setDescription(MarkdownUtil.quoteBlock("Invite Created By: " + mentionableExecutor));
-        eb.setColor(Color.CYAN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
@@ -98,7 +96,7 @@ public final class InviteActionTypeHandler extends AbstractGuildAuditLogEntryCre
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Invite Update Event");
-        eb.setColor(Color.LIGHT_GRAY);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         String implementationNotice = "We do not have sufficient data to log the changes in an INVITE_UPDATE Event"
                 .concat(" because invites seem to be immutable at the moment, which causes this event to not be fired.")
@@ -124,7 +122,7 @@ public final class InviteActionTypeHandler extends AbstractGuildAuditLogEntryCre
         String mentionableExecutor = (executor != null ? executor.getAsMention() : ale.getUserId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Invite Deleted By: " + mentionableExecutor));
-        eb.setColor(Color.BLUE);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();

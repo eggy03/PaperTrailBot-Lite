@@ -13,8 +13,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -44,7 +42,7 @@ public final class VoiceChannelStatusActionTypeHandler extends AbstractGuildAudi
         eb.setTitle("Audit Log Entry | Voice Channel Status Update");
 
         eb.setDescription("A voice channel status has been updated");
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         eb.addField(
                 MarkdownUtil.underline("Details"),
@@ -77,7 +75,7 @@ public final class VoiceChannelStatusActionTypeHandler extends AbstractGuildAudi
         eb.setTitle("Audit Log Entry | Voice Channel Status Delete");
 
         eb.setDescription("A voice channel status has been reset");
-        eb.setColor(Color.ORANGE);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         // status deletes dont contain the deleted status content
         eb.addField(

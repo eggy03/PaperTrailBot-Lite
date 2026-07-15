@@ -12,8 +12,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -39,7 +37,7 @@ public final class HomeSettingsActionTypeHandler extends AbstractGuildAuditLogEn
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Server Guide Create Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Server Guide Created By: " + mentionableExecutor));
-        eb.setColor(Color.GREEN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         eb.addField(
                 MarkdownUtil.underline("More Info"),
@@ -64,7 +62,7 @@ public final class HomeSettingsActionTypeHandler extends AbstractGuildAuditLogEn
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Server Guide Update Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Server Guide Updated By: " + mentionableExecutor));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         ale.getChanges().keySet().forEach(key -> {
             switch (key) {

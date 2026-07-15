@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -45,7 +43,6 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Member Update Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Executor: " + mentionableExecutor + "\nTarget: " + mentionableTargetUser));
-        eb.setColor(Color.CYAN);
 
         if (targetUser != null)
             eb.setThumbnail(targetUser.getEffectiveAvatarUrl());
@@ -53,15 +50,16 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();
             Object newValue = changeValue.getNewValue();
+            eb.setColor(paperTrailConfig.embedColor().warningColor());
 
             switch (changeKey) {
 
                 case "communication_disabled_until" -> {
                     if (newValue == null) {
-                        eb.setColor(Color.GREEN);
+                        eb.setColor(paperTrailConfig.embedColor().successColor());
                         eb.addField(MarkdownUtil.underline("Timeout Lifted"), "╰┈➤ Timeout has been removed", false);
                     } else {
-                        eb.setColor(Color.YELLOW);
+                        eb.setColor(paperTrailConfig.embedColor().warningColor());
                         eb.addField(MarkdownUtil.underline("Timeout Received"), "╰┈➤ Member has received a timeout", false);
                         eb.addField(MarkdownUtil.underline("Timeout Ends On"), "╰┈➤" + DurationUtils.isoToLocalTimeCounter(newValue), false);
                         eb.addField(MarkdownUtil.underline("Timeout Reason"), "╰┈➤" + (ale.getReason() != null ? ale.getReason() : "No Reason Provided"), false);
@@ -106,7 +104,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry  | Member Role Update");
         eb.setDescription(MarkdownUtil.quoteBlock("Executor: " + mentionableExecutor + "\nTarget: " + mentionableTargetUser));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         if (targetUser != null)
             eb.setThumbnail(targetUser.getEffectiveAvatarUrl());
@@ -149,7 +147,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Member Voice Kick Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Member Kicked From a Voice Channel\n By: " + mentionableExecutor));
-        eb.setColor(Color.RED);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
@@ -170,7 +168,7 @@ public final class MemberUpdateActionTypeHandler extends AbstractGuildAuditLogEn
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Member Voice Move Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Member Moved To A Different Voice Channel\n By: " + mentionableExecutor));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());

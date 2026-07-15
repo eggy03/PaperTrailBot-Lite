@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.entities.automod.AutoModRule;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -43,7 +41,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         String targetMention = (targetUser != null ? targetUser.getAsMention() : ale.getTargetId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Event: AutoMod Message Flag\nTarget Member: " + targetMention));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         eb.addField(
                 MarkdownUtil.underline("Additional Info"),
@@ -70,7 +68,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         String targetMention = (targetUser != null ? targetUser.getAsMention() : ale.getTargetId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Event: AutoMod Member Timeout\nTarget Member: " + targetMention));
-        eb.setColor(Color.MAGENTA);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         eb.addField(
                 MarkdownUtil.underline("Additional Info"),
@@ -96,7 +94,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         String targetMention = (targetUser != null ? targetUser.getAsMention() : ale.getTargetId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Event: AutoMod Message Block\nTarget Member: " + targetMention));
-        eb.setColor(Color.ORANGE);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         eb.addField(
                 MarkdownUtil.underline("Additional Info"),
@@ -123,7 +121,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         String mentionableExecutor = (executor != null ? executor.getAsMention() : ale.getUserId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Rule Created By: " + mentionableExecutor + "\nRule Created For: AutoMod"));
-        eb.setColor(Color.GREEN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
@@ -167,7 +165,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         String mentionableExecutor = (executor != null ? executor.getAsMention() : ale.getUserId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Rule Updated By: " + mentionableExecutor + "\nRule Updated For: AutoMod"));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         // add name of the rule which got updated
         AutoModRule rule = ale.getGuild().retrieveAutoModRuleById(ale.getTargetId()).complete();
@@ -193,7 +191,7 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
         String mentionableExecutor = (executor != null ? executor.getAsMention() : ale.getUserId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Rule Deleted By: " + mentionableExecutor + "\nRule Deleted For: AutoMod"));
-        eb.setColor(Color.RED);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
