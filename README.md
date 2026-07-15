@@ -119,7 +119,7 @@ java -jar target/quarkus-app/quarkus-run.jar
 The built application will be found in the `target` folder of the project.
 
 ```bash
-./target/papertrail-bot-lite-runner
+./target/papertrailbot-lite-runner
 ```
 
 #### Option D : Cloud Deployment
