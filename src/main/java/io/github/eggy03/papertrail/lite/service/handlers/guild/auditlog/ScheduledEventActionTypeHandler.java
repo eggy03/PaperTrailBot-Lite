@@ -13,8 +13,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -40,7 +38,7 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Scheduled Event Create Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Scheduled Event Created By: " + mentionableExecutor));
-        eb.setColor(Color.GREEN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();
@@ -86,7 +84,7 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Scheduled Event Update Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Scheduled Event Updated By: " + mentionableExecutor));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();
@@ -164,7 +162,7 @@ public final class ScheduledEventActionTypeHandler extends AbstractGuildAuditLog
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Scheduled Event Delete Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Scheduled Event Deleted By: " + mentionableExecutor));
-        eb.setColor(Color.RED);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();

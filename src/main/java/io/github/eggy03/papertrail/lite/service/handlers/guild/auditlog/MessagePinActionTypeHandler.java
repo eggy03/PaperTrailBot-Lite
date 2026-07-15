@@ -13,8 +13,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -44,7 +42,7 @@ public final class MessagePinActionTypeHandler extends AbstractGuildAuditLogEntr
         String mentionableTarget = (target != null ? target.getAsMention() : ale.getTargetId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Message Pinned By: " + mentionableExecutor + "\nMessage Author: " + mentionableTarget));
-        eb.setColor(Color.PINK);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         eb.addField(
                 MarkdownUtil.underline("Pinned Message Jump URL"),
@@ -73,7 +71,7 @@ public final class MessagePinActionTypeHandler extends AbstractGuildAuditLogEntr
         String mentionableTarget = (target != null ? target.getAsMention() : ale.getTargetId());
 
         eb.setDescription(MarkdownUtil.quoteBlock("Message Un-Pinned By: " + mentionableExecutor + "\nMessage Author: " + mentionableTarget));
-        eb.setColor(Color.MAGENTA);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         eb.addField(
                 MarkdownUtil.underline("Un-Pinned Message Jump URL"),

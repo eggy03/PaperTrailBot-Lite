@@ -12,8 +12,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -51,7 +49,7 @@ public final class MessageActionTypeHandler extends AbstractGuildAuditLogEntryCr
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Message Delete Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Executor: " + mentionableExecutor));
-        eb.setColor(Color.LIGHT_GRAY);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
@@ -70,7 +68,7 @@ public final class MessageActionTypeHandler extends AbstractGuildAuditLogEntryCr
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Bulk Message Delete Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Executor: " + mentionableExecutor));
-        eb.setColor(Color.LIGHT_GRAY);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());

@@ -12,8 +12,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -39,7 +37,7 @@ public final class EmojiActionTypeHandler extends AbstractGuildAuditLogEntryCrea
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Emoji Create Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Emoji Created By: " + mentionableExecutor));
-        eb.setColor(Color.GREEN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
@@ -73,7 +71,7 @@ public final class EmojiActionTypeHandler extends AbstractGuildAuditLogEntryCrea
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Emoji Update Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Emoji Updated By: " + mentionableExecutor));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
@@ -106,7 +104,7 @@ public final class EmojiActionTypeHandler extends AbstractGuildAuditLogEntryCrea
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Emoji Delete Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Emoji Deleted By: " + mentionableExecutor));
-        eb.setColor(Color.RED);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 

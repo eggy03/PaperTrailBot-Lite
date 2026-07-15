@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import net.dv8tion.jda.api.utils.TimeFormat;
 
-import java.awt.Color;
 import java.time.Instant;
 
 @ApplicationScoped
@@ -38,7 +37,7 @@ public final class GuildPollEventHandler {
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Poll Creation Event");
-        eb.setColor(Color.PINK);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
         eb.setDescription(MarkdownUtil.quoteBlock("Poll Created By: " + event.getAuthor().getAsMention() + "\nTarget Channel: " + event.getChannel().getAsMention()));
 
         eb.addField(MarkdownUtil.underline("Question"), messagePoll.getQuestion().getText(), false);

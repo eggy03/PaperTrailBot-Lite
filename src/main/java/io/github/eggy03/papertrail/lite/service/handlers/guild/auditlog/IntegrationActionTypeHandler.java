@@ -12,8 +12,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -39,7 +37,7 @@ public final class IntegrationActionTypeHandler extends AbstractGuildAuditLogEnt
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Integration Create Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Integration Created By: " + mentionableExecutor));
-        eb.setColor(Color.PINK);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
@@ -73,7 +71,7 @@ public final class IntegrationActionTypeHandler extends AbstractGuildAuditLogEnt
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Integration Update Event");
-        eb.setColor(Color.LIGHT_GRAY);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         String implementationNotice = "We do not have sufficient data to log the changes in an INTEGRATION_UPDATE Event."
                 .concat(" A proper implementation might happen in future releases if such an event is fired consistently.");
@@ -97,7 +95,7 @@ public final class IntegrationActionTypeHandler extends AbstractGuildAuditLogEnt
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Integration Delete Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Integration Deleted By: " + mentionableExecutor));
-        eb.setColor(Color.MAGENTA);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();
@@ -131,7 +129,7 @@ public final class IntegrationActionTypeHandler extends AbstractGuildAuditLogEnt
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Application Command Privilege Update");
         eb.setDescription(MarkdownUtil.quoteBlock("Application Command Privilege Updated By: " + mentionableExecutor));
-        eb.setColor(Color.PINK);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         eb.addField(MarkdownUtil.underline("More Info"), MarkdownUtil.codeblock("To know more about what changes were made, visit the Integrations section"), false);
 

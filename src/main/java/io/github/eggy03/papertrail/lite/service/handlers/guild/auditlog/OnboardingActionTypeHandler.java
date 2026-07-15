@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -39,7 +37,7 @@ public final class OnboardingActionTypeHandler extends AbstractGuildAuditLogEntr
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Onboarding Create Event");
-        eb.setColor(Color.LIGHT_GRAY);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         String implementationNotice = "We do not have sufficient data to log the changes in an ONBOARDING_CREATE Event."
                 .concat(" That is because, even for Onboarding creations, ONBOARDING_UPDATE is fired instead.")
@@ -67,7 +65,7 @@ public final class OnboardingActionTypeHandler extends AbstractGuildAuditLogEntr
         Guild guild = event.getGuild();
 
         eb.setDescription(MarkdownUtil.quoteBlock("Onboarding Settings Updated By: " + mentionableExecutor));
-        eb.setColor(Color.MAGENTA);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();

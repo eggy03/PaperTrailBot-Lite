@@ -119,7 +119,7 @@ java -jar target/quarkus-app/quarkus-run.jar
 The built application will be found in the `target` folder of the project.
 
 ```bash
-./target/papertrail-bot-lite-runner
+./target/papertrailbot-lite-runner
 ```
 
 #### Option D : Cloud Deployment
@@ -193,6 +193,16 @@ Any event category that is not explicitly configured will continue to use the gl
 | `GUILD_VOICE_LOG_CHANNEL`                | Voice state events                     | `GUILD_AUDIT_LOG_CHANNEL` |
 
 Check out an example configuration [here](/.env.example)
+
+## Embed Colors
+
+Customize the colors used for embeds based on the type of event being logged.
+
+| Variable                      | Description                                                                                                                                       | Default Value       |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
+| `EMBED_SUCCESS_COLOR_INT`     | Color used for events that represent additions or positive actions, such as member joins, emoji creation, role creation, and similar events.      | `712458` (Green)    |
+| `EMBED_WARNING_COLOR_INT`     | Color used for events that represent modifications or updates, such as member updates, channel updates, emoji updates, and similar events.        | `16776960` (Yellow) |
+| `EMBED_DESTRUCTIVE_COLOR_INT` | Color used for events that represent removals or destructive actions, such as member leaves, emoji deletions, role deletions, and similar events. | `16711680` (Red)    |
 
 ## Custom Port Configuration
 

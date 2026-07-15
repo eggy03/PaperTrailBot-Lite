@@ -16,8 +16,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -47,7 +45,7 @@ public final class ChannelActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setTitle("Audit Log Entry | Channel Create Event");
 
         eb.setDescription(MarkdownUtil.quoteBlock("Channel Created By: " + mentionableExecutor + "\nTarget Channel: " + targetChannelMention));
-        eb.setColor(Color.GREEN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
@@ -105,7 +103,7 @@ public final class ChannelActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setTitle("Audit Log Entry | Channel Update Event");
 
         eb.setDescription(MarkdownUtil.quoteBlock("Channel Updated By: " + mentionableExecutor + "\nTarget Channel: " + targetChannelMention));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 
@@ -213,7 +211,7 @@ public final class ChannelActionTypeHandler extends AbstractGuildAuditLogEntryCr
         eb.setTitle("Audit Log Entry | Channel Delete Event");
 
         eb.setDescription(MarkdownUtil.quoteBlock("Channel Deleted By: " + mentionableExecutor + "\nTarget Channel ID: " + ale.getTargetId()));
-        eb.setColor(Color.RED);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
 

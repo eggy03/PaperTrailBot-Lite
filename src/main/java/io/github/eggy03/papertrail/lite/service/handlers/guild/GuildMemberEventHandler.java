@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import net.dv8tion.jda.api.utils.TimeFormat;
 
-import java.awt.Color;
 import java.time.Instant;
 
 @ApplicationScoped
@@ -42,7 +41,7 @@ public final class GuildMemberEventHandler {
         eb.setTitle("Audit Log Entry | Member Join Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Member Joined: " + user.getName() + "\nGuild: " + guild.getName()));
         eb.setThumbnail(user.getEffectiveAvatarUrl());
-        eb.setColor(Color.GREEN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         eb.addField(MarkdownUtil.underline("Member Name"), "╰┈➤" + user.getName(), false);
         eb.addField(MarkdownUtil.underline("Member Mention"), "╰┈➤" + user.getAsMention(), false);
@@ -65,7 +64,7 @@ public final class GuildMemberEventHandler {
         eb.setTitle("Audit Log Entry | Member Leave Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Member Left: " + user.getName() + "\nGuild: " + guild.getName()));
         eb.setThumbnail(user.getEffectiveAvatarUrl());
-        eb.setColor(Color.RED);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         eb.addField(MarkdownUtil.underline("Member Name"), "╰┈➤" + user.getName(), false);
         eb.addField(MarkdownUtil.underline("Member ID"), "╰┈➤" + user.getId(), false);

@@ -8,6 +8,7 @@ import lombok.NonNull;
 public interface PaperTrailConfig {
 
     General general();
+    EmbedColor embedColor();
     Guild guild();
 
     interface General {
@@ -27,6 +28,18 @@ public interface PaperTrailConfig {
         @WithName("app.discord.token")
         @NonNull
         String appDiscordToken();
+    }
+
+    interface EmbedColor {
+
+        @WithName("success.color.integer")
+        int successColor();
+
+        @WithName("warning.color.integer")
+        int warningColor();
+
+        @WithName("destructive.color.integer")
+        int destructiveColor();
     }
 
     interface Guild {

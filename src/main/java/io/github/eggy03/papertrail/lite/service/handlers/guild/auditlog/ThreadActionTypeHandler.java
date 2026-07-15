@@ -17,8 +17,6 @@ import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 
-import java.awt.Color;
-
 @ApplicationScoped
 @Slf4j
 @SuppressWarnings("java:S1192")
@@ -47,7 +45,7 @@ public final class ThreadActionTypeHandler extends AbstractGuildAuditLogEntryCre
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Thread Create Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Thread Created By: " + mentionableExecutor + "\nTarget Thread: " + mentionableTargetThread));
-        eb.setColor(Color.GREEN);
+        eb.setColor(paperTrailConfig.embedColor().successColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();
@@ -105,7 +103,7 @@ public final class ThreadActionTypeHandler extends AbstractGuildAuditLogEntryCre
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Thread Update Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Thread Updated By: " + mentionableExecutor + "\nTarget Thread: " + mentionableTargetThread));
-        eb.setColor(Color.YELLOW);
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
 
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
@@ -178,7 +176,7 @@ public final class ThreadActionTypeHandler extends AbstractGuildAuditLogEntryCre
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Audit Log Entry | Thread Delete Event");
         eb.setDescription(MarkdownUtil.quoteBlock("Thread Deleted By: " + mentionableExecutor + "\nTarget Thread ID: " + ale.getTargetId()));
-        eb.setColor(Color.RED);
+        eb.setColor(paperTrailConfig.embedColor().destructiveColor());
 
         ale.getChanges().forEach((changeKey, changeValue) -> {
             Object oldValue = changeValue.getOldValue();
