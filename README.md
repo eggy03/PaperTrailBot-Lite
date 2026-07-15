@@ -194,6 +194,16 @@ Any event category that is not explicitly configured will continue to use the gl
 
 Check out an example configuration [here](/.env.example)
 
+## Embed Colors
+
+Customize the colors used for embeds based on the type of event being logged.
+
+| Variable                      | Description                                                                                                                                       | Default Value       |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
+| `EMBED_SUCCESS_COLOR_INT`     | Color used for events that represent additions or positive actions, such as member joins, emoji creation, role creation, and similar events.      | `712458` (Green)    |
+| `EMBED_WARNING_COLOR_INT`     | Color used for events that represent modifications or updates, such as member updates, channel updates, emoji updates, and similar events.        | `16776960` (Yellow) |
+| `EMBED_DESTRUCTIVE_COLOR_INT` | Color used for events that represent removals or destructive actions, such as member leaves, emoji deletions, role deletions, and similar events. | `16711680` (Red)    |
+
 ## Custom Port Configuration
 
 By, default PaperTrail runs on port 8080. If port 8080 is occupied by a different service, or you wish to
