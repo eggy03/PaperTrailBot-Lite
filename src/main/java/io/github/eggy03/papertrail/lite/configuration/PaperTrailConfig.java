@@ -44,138 +44,147 @@ public interface PaperTrailConfig {
 
     interface Guild {
 
-        @NonNull AuditLog auditLog();
-        @NonNull Message message();
+        AutomodEvent automodEvent();
+        ChannelEvent channelEvent();
+        EmojiEvent emojiEvent();
+        GuildUpdateEvent guildUpdateEvent();
+        HomeSettingsEvent homeSettingsEvent();
+        IntegrationEvent integrationEvent();
+        InviteEvent inviteEvent();
+        MemberEvent memberEvent();
+        ModActionEvent modActionEvent();
+        OnboardingEvent onboardingEvent();
+        RoleEvent roleEvent();
+        ScheduledEventEvent scheduledEventEvent();
+        StageInstanceEvent stageInstanceEvent();
+        SoundboardEvent soundboardEvent();
+        StickerEvent stickerEvent();
+        ThreadEvent threadEvent();
+        UnknownEvent unknownEvent();
+        VoiceEvent voiceEvent();
+        WebhookEvent webhookEvent();
+        BoostEvent boostEvent();
+        PollEvent pollEvent();
+        SecurityIncidentEvent securityIncidentEvent();
+        MessageEvent messageEvent();
 
-        interface AuditLog {
-
-            // Global Audit Log Channel
-            @WithName("global.log.channel")
-            @NonNull
-            String globalLogChannel();
-
-            // Audit Log Channel Overrides
-            @WithName("automod.action.type.log.channel")
-            @NonNull
-            String automodActionTypeLogChannel();
-
-            @WithName("channel.action.type.log.channel")
-            @NonNull
-            String channelActionTypeLogChannel();
-
-            @WithName("channel.override.action.type.log.channel")
-            @NonNull
-            String channelOverrideActionTypeLogChannel();
-
-            @WithName("emoji.action.type.log.channel")
-            @NonNull
-            String emojiActionTypeLogChannel();
-
-            @WithName("guild.update.action.type.log.channel")
-            @NonNull
-            String guildUpdateActionTypeLogChannel();
-
-            @WithName("home.settings.action.type.log.channel")
-            @NonNull
-            String homeSettingsActionTypeLogChannel();
-
-            @WithName("integration.action.type.log.channel")
-            @NonNull
-            String integrationActionTypeLogChannel();
-
-            @WithName("invite.action.type.log.channel")
-            @NonNull
-            String inviteActionTypeLogChannel();
-
-            @WithName("member.update.action.type.log.channel")
-            @NonNull
-            String memberUpdateActionTypeLogChannel();
-
-            @WithName("message.action.type.log.channel")
-            @NonNull
-            String messageActionTypeLogChannel();
-
-            @WithName("message.pin.action.type.log.channel")
-            @NonNull
-            String messagePinActionTypeLogChannel();
-
-            @WithName("mod.action.type.log.channel")
-            @NonNull
-            String modActionActionTypeLogChannel();
-
-            @WithName("onboarding.action.type.log.channel")
-            @NonNull
-            String onboardingActionTypeLogChannel();
-
-            @WithName("onboarding.prompt.action.type.log.channel")
-            @NonNull
-            String onboardingPromptActionTypeLogChannel();
-
-            @WithName("role.action.type.log.channel")
-            @NonNull
-            String roleActionTypeLogChannel();
-
-            @WithName("scheduled.event.action.type.log.channel")
-            @NonNull
-            String scheduledEventActionTypeLogChannel();
-
-            @WithName("soundboard.action.type.log.channel")
-            @NonNull
-            String soundboardActionTypeLogChannel();
-
-            @WithName("stage.instance.action.type.log.channel")
-            @NonNull
-            String stageInstanceActionTypeLogChannel();
-
-            @WithName("sticker.action.type.log.channel")
-            @NonNull
-            String stickerActionTypeLogChannel();
-
-            @WithName("thread.action.type.log.channel")
-            @NonNull
-            String threadActionTypeLogChannel();
-
-            @WithName("unknown.action.type.log.channel")
-            @NonNull
-            String unknownActionTypeLogChannel();
-
-            @WithName("voice.channel.status.action.type.log.channel")
-            @NonNull
-            String voiceChannelStatusActionTypeLogChannel();
-
-            @WithName("webhook.action.type.log.channel")
-            @NonNull
-            String webhookActionTypeLogChannel();
+        interface AutomodEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
         }
 
-        interface Message {
-            @WithName("global.log.channel")
-            @NonNull
-            String globalLogChannel();
+        interface ChannelEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface EmojiEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface GuildUpdateEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface HomeSettingsEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface IntegrationEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface InviteEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface MemberEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface ModActionEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface OnboardingEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface RoleEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface ScheduledEventEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface SoundboardEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface StageInstanceEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface StickerEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface ThreadEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface UnknownEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface VoiceEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface WebhookEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface BoostEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface PollEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface SecurityIncidentEvent {
+            @WithName("log.channel")
+            @NonNull String logChannel();
+        }
+
+        interface MessageEvent {
+
+            @WithName("log.channel")
+            @NonNull String logChannel();
 
             @WithName("retention.days")
-            long guildMessageRetentionDays();
+            long retentionDays();
         }
-
-        // guild
-        @WithName("boost.event.log.channel")
-        @NonNull
-        String boostEventLogChannel();
-
-        @WithName("member.event.log.channel")
-        @NonNull
-        String memberEventLogChannel();
-
-        @WithName("poll.event.log.channel")
-        @NonNull
-        String pollEventLogChannel();
-
-        @WithName("security.incident.event.log.channel")
-        @NonNull
-        String securityIncidentEventLogChannel();
-
-        @WithName("voice.event.log.channel")
-        @NonNull
-        String voiceEventLogChannel();
     }
 }

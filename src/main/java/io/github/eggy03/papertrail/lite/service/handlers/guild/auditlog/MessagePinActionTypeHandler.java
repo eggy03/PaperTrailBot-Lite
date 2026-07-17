@@ -53,7 +53,7 @@ public final class MessagePinActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().messagePinActionTypeLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().messageEvent().logChannel());
     }
 
     @Override
@@ -82,6 +82,6 @@ public final class MessagePinActionTypeHandler extends AbstractGuildAuditLogEntr
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().messagePinActionTypeLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().messageEvent().logChannel());
     }
 }

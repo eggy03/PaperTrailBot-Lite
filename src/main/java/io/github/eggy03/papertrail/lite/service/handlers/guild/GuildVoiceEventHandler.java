@@ -71,6 +71,6 @@ public final class GuildVoiceEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().voiceEventLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().voiceEvent().logChannel());
     }
 }

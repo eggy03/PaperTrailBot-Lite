@@ -118,7 +118,7 @@ public final class GuildUpdateActionTypeHandler extends AbstractGuildAuditLogEnt
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().guildUpdateActionTypeLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().guildUpdateEvent().logChannel());
     }
 
     @Override
@@ -150,6 +150,6 @@ public final class GuildUpdateActionTypeHandler extends AbstractGuildAuditLogEnt
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().guildUpdateActionTypeLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().guildUpdateEvent().logChannel());
     }
 }

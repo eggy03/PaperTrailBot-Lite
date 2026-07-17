@@ -48,7 +48,7 @@ public final class GuildPollEventHandler {
         eb.setFooter(event.getGuild().getName());
         eb.setTimestamp(Instant.now());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().pollEventLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().pollEvent().logChannel());
 
     }
 
