@@ -40,7 +40,7 @@ public final class GuildMessageEventHandler {
 
     public void handleMessageReceivedEvent(@NonNull MessageReceivedEvent event) {
 
-        if (paperTrailConfig.guild().message().globalLogChannel().equals("-1")) return;
+        if (paperTrailConfig.guild().messageEvent().logChannel().equals("-1")) return;
 
         String messageId = event.getMessageId();
         String messageContent = event.getMessage().getContentDisplay();
@@ -89,7 +89,7 @@ public final class GuildMessageEventHandler {
         // update the repository with the new message
         repository.put(new GuildMessage(oldGuildMessage.messageId(), updatedMessageContent, event.getAuthor().getId()));
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().message().globalLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().messageEvent().logChannel());
     }
 
     public void handleMessageDeleteEvent(@NonNull MessageDeleteEvent event) {
@@ -123,6 +123,6 @@ public final class GuildMessageEventHandler {
         log.debug("Message To Delete: [Content: {}, Author: {}]", deletedMessage, author != null ? author.getName() : deletedMessageAuthorId);
         repository.delete(event.getMessageId());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().message().globalLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().messageEvent().logChannel());
     }
 }

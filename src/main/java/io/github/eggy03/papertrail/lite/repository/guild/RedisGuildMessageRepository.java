@@ -26,7 +26,7 @@ public final class RedisGuildMessageRepository implements GuildMessageRepository
     public RedisGuildMessageRepository(@NonNull RedisDataSource redisDataSource, @NonNull PaperTrailConfig paperTrailConfig) {
         this.keyCommands = redisDataSource.key(String.class);
         this.valueCommands = redisDataSource.value(String.class, GuildMessage.class);
-        this.retentionDuration = Duration.ofDays(paperTrailConfig.guild().message().guildMessageRetentionDays());
+        this.retentionDuration = Duration.ofDays(paperTrailConfig.guild().messageEvent().retentionDays());
     }
 
     @Override

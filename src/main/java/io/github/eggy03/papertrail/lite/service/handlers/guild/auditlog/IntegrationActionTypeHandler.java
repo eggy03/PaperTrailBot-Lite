@@ -58,7 +58,7 @@ public final class IntegrationActionTypeHandler extends AbstractGuildAuditLogEnt
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().integrationActionTypeLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().integrationEvent().logChannel());
     }
 
     @Override
@@ -81,7 +81,7 @@ public final class IntegrationActionTypeHandler extends AbstractGuildAuditLogEnt
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().integrationActionTypeLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().integrationEvent().logChannel());
     }
 
     @Override
@@ -115,7 +115,7 @@ public final class IntegrationActionTypeHandler extends AbstractGuildAuditLogEnt
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().integrationActionTypeLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().integrationEvent().logChannel());
     }
 
     @Override
@@ -136,6 +136,6 @@ public final class IntegrationActionTypeHandler extends AbstractGuildAuditLogEnt
         eb.setFooter("Audit Log Entry ID: " + ale.getId());
         eb.setTimestamp(ale.getTimeCreated());
 
-        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().auditLog().integrationActionTypeLogChannel());
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().integrationEvent().logChannel());
     }
 }
