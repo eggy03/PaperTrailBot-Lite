@@ -2,6 +2,7 @@ package io.github.eggy03.papertrail.lite.service.handlers.command;
 
 import io.github.eggy03.papertrail.lite.configuration.PaperTrailConfig;
 import io.github.eggy03.papertrail.lite.utils.BooleanUtils;
+import io.github.eggy03.papertrail.lite.utils.PermissionUtils;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
@@ -16,24 +17,11 @@ import net.dv8tion.jda.api.utils.MarkdownUtil;
 import java.awt.Color;
 import java.time.Instant;
 import java.util.EnumSet;
-import java.util.Set;
 
 @ApplicationScoped
 public final class DebugCommandHandler {
 
     private final @NonNull PaperTrailConfig paperTrailConfig;
-
-    // necessary permissions for the bot to function
-    @NonNull
-    private final Set<Permission> necessaryPermissions = EnumSet.of(
-            Permission.VIEW_CHANNEL,
-            Permission.VIEW_AUDIT_LOGS,
-            Permission.MANAGE_SERVER,
-            Permission.MESSAGE_SEND,
-            Permission.MESSAGE_SEND_IN_THREADS,
-            Permission.MESSAGE_EMBED_LINKS,
-            Permission.MESSAGE_HISTORY
-    );
 
     @Inject
     public DebugCommandHandler(@NonNull PaperTrailConfig paperTrailConfig) {
@@ -85,10 +73,10 @@ public final class DebugCommandHandler {
         // 2) RETAIN those GRANTED PERMISSIONS that match with the NECESSARY ONES
         // there may be cases where GRANTED PERMISSIONS is NOT a perfect SUPERSET of NECESSARY PERMISSIONS
         // this indicates that some NECESSARY PERMISSIONS have been DENIED
-        grantedPermissions.retainAll(necessaryPermissions);
+        grantedPermissions.retainAll(PermissionUtils.necessaryPermissions());
 
         // create a copy of necessary permissions
-        EnumSet<Permission> deniedPermissions = EnumSet.copyOf(necessaryPermissions);
+        EnumSet<Permission> deniedPermissions = EnumSet.copyOf(PermissionUtils.necessaryPermissions());
         // now if you calculate necessary - granted, you will get the set of necessary permissions which are DENIED
         deniedPermissions.removeAll(grantedPermissions);
 
