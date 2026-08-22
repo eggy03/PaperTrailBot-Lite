@@ -61,6 +61,11 @@ public final class RoleActionTypeHandler extends AbstractGuildAuditLogEntryCreat
                      * and delegates them to ROLE_UPDATE event
                      */
                 }
+
+                case "icon_hash" -> {
+                    // ignore
+                }
+
                 default -> {
                     eb.addField("Unimplemented Change Key", changeKey, false);
                     log.info("Unimplemented Change Key on Role Create: {}\nOLD_VALUE: {}\nNEW_VALUE: {}", changeKey, oldValue, newValue);
@@ -185,6 +190,10 @@ public final class RoleActionTypeHandler extends AbstractGuildAuditLogEntryCreat
 
                 case "colors" ->
                         eb.addField(MarkdownUtil.underline("Gradient Color System"), RoleUtils.formatGradientToHex(oldValue), false);
+
+                case "icon_hash" -> {
+                    // ignore
+                }
 
                 default -> {
                     eb.addField("Unimplemented Change Key", changeKey, false);
