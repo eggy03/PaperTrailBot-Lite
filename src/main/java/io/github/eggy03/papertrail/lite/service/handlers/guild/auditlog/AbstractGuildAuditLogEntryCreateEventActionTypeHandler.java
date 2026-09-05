@@ -331,6 +331,7 @@ public abstract class AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
         switch (action) {
             case AUTO_MODERATION_FLAG_TO_CHANNEL -> onAutoModerationFlagToChannel(event);
             case AUTO_MODERATION_MEMBER_TIMEOUT -> onAutoModerationMemberTimeout(event);
+            case AUTO_MODERATION_QUARANTINE_USER -> onAutoModerationQuarantineUser(event);
             case AUTO_MODERATION_RULE_BLOCK_MESSAGE -> onAutoModerationRuleBlockMessage(event);
             case AUTO_MODERATION_RULE_CREATE -> onAutoModerationRuleCreate(event);
             case AUTO_MODERATION_RULE_UPDATE -> onAutoModerationRuleUpdate(event);
