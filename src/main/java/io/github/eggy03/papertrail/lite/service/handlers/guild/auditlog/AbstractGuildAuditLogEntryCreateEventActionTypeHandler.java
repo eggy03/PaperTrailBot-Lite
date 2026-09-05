@@ -97,6 +97,9 @@ public abstract class AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
     public void onAutoModerationMemberTimeout(@NonNull GuildAuditLogEntryCreateEvent event) {
     }
 
+    public void onAutoModerationQuarantineUser(@NonNull GuildAuditLogEntryCreateEvent event) {
+    }
+
     public void onAutoModerationRuleBlockMessage(@NonNull GuildAuditLogEntryCreateEvent event) {
     }
 
@@ -417,6 +420,8 @@ public abstract class AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
 
             case HOME_SETTINGS_CREATE -> onHomeSettingsCreate(event);
             case HOME_SETTINGS_UPDATE -> onHomeSettingsUpdate(event);
+
+            case AUTO_MODERATION_QUARANTINE_USER -> onAutoModerationQuarantineUser(event);
 
             case UNKNOWN -> onUnknownActionType(event);
 
