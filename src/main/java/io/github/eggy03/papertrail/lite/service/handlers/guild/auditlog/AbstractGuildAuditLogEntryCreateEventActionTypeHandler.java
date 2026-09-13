@@ -422,8 +422,6 @@ public abstract class AbstractGuildAuditLogEntryCreateEventActionTypeHandler {
             case HOME_SETTINGS_CREATE -> onHomeSettingsCreate(event);
             case HOME_SETTINGS_UPDATE -> onHomeSettingsUpdate(event);
 
-            case AUTO_MODERATION_QUARANTINE_USER -> onAutoModerationQuarantineUser(event);
-
             case UNKNOWN -> onUnknownActionType(event);
 
             default -> onUnimplementedActionType(event);
