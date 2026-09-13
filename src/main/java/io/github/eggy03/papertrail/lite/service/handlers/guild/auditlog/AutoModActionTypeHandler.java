@@ -207,4 +207,37 @@ public final class AutoModActionTypeHandler extends AbstractGuildAuditLogEntryCr
 
         embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().automodEvent().logChannel());
     }
+
+    @Override
+    public void onAutoModerationQuarantineUser(@NonNull GuildAuditLogEntryCreateEvent event) {
+
+        AuditLogEntry ale = event.getEntry();
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Audit Log Entry | AutoMod Quarantine User");
+
+        User targetMember = ale.getJDA().getUserById(ale.getTargetIdLong());
+        String mentionableTarget = (targetMember != null ? targetMember.getAsMention() : ale.getTargetId());
+
+        eb.setDescription(MarkdownUtil.quoteBlock("Quarantined User: " + mentionableTarget));
+        eb.setColor(paperTrailConfig.embedColor().warningColor());
+
+        eb.addField("INFO", "The bot is still learning about this event. Additional info will be available soon", false);
+
+        // todo show changes in embed after enough data has been gathered
+        ale.getChanges().forEach((changeKey, changeValue) -> {
+
+            Object oldValue = changeValue.getOldValue();
+            Object newValue = changeValue.getNewValue();
+
+            log.info("Automod Quarantine User | Change Key : {} | Old Change Value : {} | New Change Value : {}", changeKey, oldValue, newValue);
+
+        });
+
+        eb.setFooter("Audit Log Entry ID: " + ale.getId());
+        eb.setTimestamp(ale.getTimeCreated());
+
+        embedSendingService.checkAndSend(event, eb, paperTrailConfig.guild().automodEvent().logChannel());
+
+    }
 }
