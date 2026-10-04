@@ -1,3 +1,7 @@
+>[!NOTE]
+>Development of this edition of the bot has been ceased. I'm not getting the time to maintain this edition.
+>The original edition is still being actively maintained.
+
 # Overview
 
 A lightweight edition of PaperTrail designed for users who want to self-host the bot for a single Discord server. Unlike
